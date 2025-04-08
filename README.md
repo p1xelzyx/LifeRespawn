@@ -22,7 +22,7 @@ Cilnja skupina ljudi, ki bi uporabljala to aplikacijo so vsi, ki imajo težave z
 | Ime             | Prednosti                                                                 | Slabosti                                                              | Naša razlika                                                                 |
 |-----------------|---------------------------------------------------------------------------|-----------------------------------------------------------------------|----------------------------------------------------------------------------|
 | **Habitica**    | Gamifikacija motivira, Sledenje napredku z nagradami            | Pomanjkanje osebne prilagoditve, Površinski pristop          | Poudarek na personalizaciji in dolgoročnih spremembah                   |
-| **Simple Goal Tracker** | Enostavna uporaba, Osredotočenost na preproste cilje      | Premalo prilagodljivosti, Pomanjkanje čustvenih vidikov      | Spremljanje celostnega življenjskega sloga in prilagodljivi nasveti    |
+| **Goal & Habit Tracker Calendar** | Enostavna uporaba, Osredotočenost na preproste cilje      | Premalo prilagodljivosti, Pomanjkanje čustvenih vidikov      | Spremljanje celostnega življenjskega sloga in prilagodljivi nasveti    |
 | **Strides**     | Raznolika sledenja ciljem, Prilagodljivost in opomniki           | Lahko je preveč kompleksen, Manj interaktivnosti             | Poudarek na osebni analizi in dolgoročnem prehodu v bolj zdrave navade |
 
 
