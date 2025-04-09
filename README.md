@@ -26,6 +26,11 @@ Cilnja skupina ljudi, ki bi uporabljala to aplikacijo so vsi, ki imajo težave z
 | **Strides**     | Raznolika sledenja ciljem, Prilagodljivost in opomniki           | Lahko je preveč kompleksen, Manj interaktivnosti             | Poudarek na osebni analizi in dolgoročnem prehodu v bolj zdrave navade |
 
 
+### Swot analiza
 
-
-
+| Prednosti | Slabosti |
+|-----------|----------|
+|  a        |  b       |
+| Priložnosti | Grožnje |
+|-------------|---------|
+|     c     |  d         |
