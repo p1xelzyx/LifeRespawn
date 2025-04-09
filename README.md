@@ -53,3 +53,21 @@ Cilnja skupina ljudi, ki bi uporabljala to aplikacijo so vsi, ki imajo težave z
   <li>Izgradnja skupnosti uporabnikov za večjo zvestobo in pomoč pri premagovanju izzivov.</li>
  </ul></li>
 </ul>
+
+
+### Poslovni model in osnovni finančni plan
+<ul>
+ <li>Viri prihodkov:<ul>
+  <li>Osnova aplikacija je brezplačna</li>
+  <li>Premium članstvo: dostop do naprednih funkionalnosti (npr. AI ki za nas zahteva da plačamo za API) ?€/mesec</li>
+ </ul></li>
+ <li>Struktura stroškov:<ul>
+  <li>Za enkrat nič. Kasneje bo treba plačati za različne API-je</li>
+  <li>Marketing: interneti oglasi. Npr. youtube zahteva 0.1€ do 0.50€ na ogled oglasa (Na dan si lahko nastavimo budget npr. 10€ - to je 100 - 20 ogledov našega oglasa na dan)</li>
+ </ul></li>
+ <li>Strategija pridobivanja uporabnikov:<ul>
+  <li>Internetni oglasi (pod točko 2), youtube channel (0€), tiktok/instagram videi (0€)</li>
+ </ul></li>
+</ul>
+
+
