@@ -30,6 +30,6 @@ Cilnja skupina ljudi, ki bi uporabljala to aplikacijo so vsi, ki imajo težave z
 
 | **Prednosti** | **Slabosti** |
 |-------------|----------------|
-|     |  - Uporabnikom lahko traja nekaj časa, da se privadijo na spremljanje svojih navad in analizo podatkov.  \ - Potreben je dolgoročen angažma uporabnika, ki lahko zmanjša motivacijo, če napredek ni takojšen.  |
+|     |  - Uporabnikom lahko traja nekaj časa, da se privadijo na spremljanje svojih navad in analizo podatkov. <br> Potreben je dolgoročen angažma uporabnika, ki lahko zmanjša motivacijo, če napredek ni takojšen.  |
 | **Priložnosti** | **Grožnje** |
 |     c     |  d         |
