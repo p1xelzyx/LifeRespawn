@@ -33,3 +33,23 @@ Cilnja skupina ljudi, ki bi uporabljala to aplikacijo so vsi, ki imajo težave z
 | - Personalizacija: Poudarek na prilagojenih priporočilih za posameznika na podlagi njihovih dnevnih navad.	<br> - Dolgoročni pristop: Poudarek na dolgoročnem izboljšanju, kar je bolj trajnostno kot kratkoročne rešitve. <br> - Pomoč pri izgradnji dobrih navad: Spremljanje in pozitivni nasveti za pomoč pri izgradnji zdravih navad.   |  - Uporabnikom lahko traja nekaj časa, da se privadijo na spremljanje svojih navad in analizo podatkov <br> - Uporabniki, ki iščejo hiter uspeh, lahko obupajo, če ne vidijo takojšnjih rezultatov. <br> - Implementirati personalizacijo je zapleteno |
 | **Priložnosti** | **Grožnje** |
 |  - Rastoča potreba po mentalnem zdravju: Z naraščajočo pozornostjo na duševno zdravje (na primer depresija in ADHD) bo več ljudi iskalo orodja za izboljšanje svojega počutja. <br> - Povečanje zavedanja o duševnem zdravju: Ljudje so vedno bolj pripravljeni vlagati v izboljšanje svojega duševnega zdravja, kar pomeni rast potencialne uporabniške baze. <br> - Podpora strokovnjakov in svetovalcev: Možnost partnerstva s psihologi in strokovnjaki za duševno zdravje za bolj poglobljene analize in nasvete.    |  - Večje platforme lahko kopirajo našo idejo <br> - Težave s zasebnostjo podatkov in zanesljivostjo aplikacije lahko zmanjšajo uporabniško zaupanje. <br> - Obstaja veliko aplikacij in platform, ki ponujajo <i>podobne</i> funkcionalnosti, kot so Habitica, Strides, itd.  |
+
+#### Strategije na podlagi SWOT
+
+<ul>
+ <li>S-O strategija<ul>
+  <li>Izkoristi personalizacijo in dolgoročni pristop za pritegnitev uporabnikov, ki iščejo trajnostne rešitve za duševno zdravje in dobro počutje.</li>
+ </ul></li>
+ <li>W-O strategija<ul>
+  <li>Poveži se s strokovnjaki za duševno zdravje, da povečaš kredibilnost in izboljšaš personalizacijo aplikacije.</li>
+  <li>Motiviraj uporabnike z vidno analizo prejšnega počutja in sedanjega.</li>
+ </ul></li>
+ <li>S-T strategija<ul>
+  <li>Povečaj zaščito podatkov in ponudi strokovno podprto vsebino, da ohraniš zaupanje uporabnikov in se zoperstaviš konkurenci.</li>
+  <li>Poveži se z organizacijami (npr. terapevti), da okrepiš zaupanje in povečaš kredibilnost.</li>
+ </ul></li>
+ <li>W-T strategija<ul>
+  <li>Začni z enostavnimi cilji in postopno povečevanje zahtevnosti, da preprečiš obup uporabnikov zaradi pomanjkanja hitrih rezultatov.</li>
+  <li>Izgradnja skupnosti uporabnikov za večjo zvestobo in pomoč pri premagovanju izzivov.</li>
+ </ul></li>
+</ul>
