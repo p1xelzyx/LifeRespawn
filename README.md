@@ -28,9 +28,9 @@ Cilnja skupina ljudi, ki bi uporabljala to aplikacijo so vsi, ki imajo težave z
 
 ### Swot analiza
 
-| Prednosti | Slabosti |
+| **Prednosti** | **Slabosti** |
 |-----------|----------|
 |  a        |  b       |
-| Priložnosti | Grožnje |
+| **Priložnosti** | **Grožnje** |
 |-------------|---------|
 |     c     |  d         |
