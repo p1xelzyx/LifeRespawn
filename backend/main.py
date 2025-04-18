@@ -42,9 +42,9 @@ def login():
     if not user or not checkHash(user["password"], data["password"]):
         return jsonify({"status": "fail", "error": "invalid credentials"})
     
-
-
     
+
+    usm.login_user(user["username"])
     print(user)
 
     return jsonify({"status": "success"})

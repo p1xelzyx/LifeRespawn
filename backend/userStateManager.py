@@ -13,3 +13,6 @@ class UserStateManager:
     def logout_user(self, user):
         if user in self.users:
             self.users.pop(user)
+
+    def get_user(self, id):
+        return list(self.users.keys())[list(self.users.values()).index(id)]
