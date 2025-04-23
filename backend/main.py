@@ -53,9 +53,9 @@ def login():
     resp.set_cookie(
         'sessionid', 
         usm.users[user["username"]],
-        httponly=True,  # Prevents JavaScript access
-        secure=True,    # Ensure cookie is sent over HTTPS only
-        samesite="Lax", # Helps protect against CSRF
+        #httponly=True,  # Prevents JavaScript access
+        #secure=True,    # Ensure cookie is sent over HTTPS only
+        #samesite="Lax", # Helps protect against CSRF
     )
 
 
@@ -64,6 +64,7 @@ def login():
 @app.route("/logout", methods=["POST"])
 def logout():
     sessionid = request.cookies.get("sessionid")
+    print(sessionid)
     try:
         usm.logout_user(usm.get_user(sessionid))
         resp = make_response(jsonify({"status": "success"}))
