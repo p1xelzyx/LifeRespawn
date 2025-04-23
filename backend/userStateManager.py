@@ -15,4 +15,7 @@ class UserStateManager:
             self.users.pop(user)
 
     def get_user(self, id):
-        return list(self.users.keys())[list(self.users.values()).index(id)]
+        try:
+            return list(self.users.keys())[list(self.users.values()).index(id)]
+        except:
+            return None

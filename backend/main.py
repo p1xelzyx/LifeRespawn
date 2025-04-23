@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response, render_template
 from tinydb import TinyDB, Query
 import bcrypt
 import base64
@@ -9,7 +9,10 @@ db = TinyDB('../db.json')
 usm = UserStateManager()
 app = Flask(__name__)
 
-
+@app.route("/")
+def test():
+    print("test")
+    return render_template("index.html")
 
 @app.route('/register', methods = ["POST"])
 def register():
@@ -45,10 +48,36 @@ def login():
     
 
     usm.login_user(user["username"])
-    print(user)
+    
+    resp = make_response(jsonify({"status": "success"}))
+    resp.set_cookie(
+        'sessionid', 
+        usm.users[user["username"]],
+        httponly=True,  # Prevents JavaScript access
+        secure=True,    # Ensure cookie is sent over HTTPS only
+        samesite="Lax", # Helps protect against CSRF
+    )
 
-    return jsonify({"status": "success"})
 
+    return resp
+
+@app.route("/logout", methods=["POST"])
+def logout():
+    sessionid = request.cookies.get("sessionid")
+    try:
+        usm.logout_user(usm.get_user(sessionid))
+        resp = make_response(jsonify({"status": "success"}))
+        resp.delete_cookie("sessionid")
+        return resp
+    except:
+        return jsonify({"status": "fail"})
+
+
+@app.route("/check_session", methods=["POST"])
+def check_session():
+    sessionid = request.cookies.get("sessionid")
+    print(sessionid)
+    return jsonify({"session": sessionid})
 
 def hashText(text):
     hashed_bytes = bcrypt.hashpw(text.encode('utf-8'), bcrypt.gensalt())

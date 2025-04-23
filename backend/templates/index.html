@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    test auth
+    <input type="text" id="a">
+    <input type="password" id="b">
+
+    <button id="1">login</button>
+    <button id="2">register</button>
+    <button id="3">check session</button>
+    <button id="4">logout</button>
+
+    <script>
+        const user = document.getElementById("a");
+        const pass = document.getElementById("b");
+
+        const login = document.getElementById("1");
+        const register = document.getElementById("2");
+        const check = document.getElementById("3");
+        const logout = document.getElementById("4");
+
+
+        login.addEventListener("click", async () => {
+            const response = await fetch("/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({username: user.value, password: pass.value}) 
+            })
+            console.log(await response.json());
+        });
+        register.addEventListener("click", async () => {
+            const response = await fetch("/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({username: user.value, password: pass.value}) 
+            })
+            console.log(await response.json());
+        });
+        check.addEventListener("click", async () => {
+            const response = await fetch("/check_session", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include"
+            })
+            console.log(await response.json());
+        });
+        logout.addEventListener("click", async () => {
+            const response = await fetch("/logout", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include"
+            })
+            console.log(await response.json());
+        })
+    </script>
+</body>
+</html>
