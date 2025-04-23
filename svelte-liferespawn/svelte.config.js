@@ -11,6 +11,9 @@ const config = {
 			hooks: {
 				server: 'src/hooks.server.js'
 			}
+		},
+		alias: {
+			"$components": "src/lib/components/"
 		}
 	}
 };
