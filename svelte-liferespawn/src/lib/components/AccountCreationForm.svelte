@@ -1,5 +1,5 @@
 <script>
-    
+    import { logout } from "$utils/logout"
 
     let username = $state("");
     let password = $state("");
@@ -21,18 +21,6 @@
         const response = await fetch('/api/post', {
 			method: 'POST',
 			body: JSON.stringify({endpoint: "register", data: { username, password }}),
-			headers: {
-				'content-type': 'application/json'
-			}
-		});
-
-		console.log(await response.json());
-    }
-    async function logout() {
-        console.log("try logout");
-        const response = await fetch('/api/post', {
-			method: 'POST',
-			body: JSON.stringify({endpoint: "logout"}),
 			headers: {
 				'content-type': 'application/json'
 			}

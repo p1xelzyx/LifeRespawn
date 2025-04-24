@@ -4,12 +4,19 @@
 
     let { children } = $props();
 
-    import { check_session } from "$lib/utils/check_session"
+    import { check_session } from "$utils";
     import { onMount } from "svelte";
 
 	onMount(async () => {
-		console.log(await check_session());
+		let data = await check_session();
+
+        if(data?.username) {
+            console.log(`Logged in as ${data?.username}`);
+        } else {
+            console.log("no session, go login");
+        }
 	});
+
 
 </script>
 

@@ -77,8 +77,7 @@ def logout():
 @app.route("/check_session", methods=["POST"])
 def check_session():
     sessionid = request.cookies.get("sessionid")
-    print(sessionid)
-    return jsonify({"session": sessionid})
+    return jsonify({"username": usm.get_user(sessionid)})
 
 def hashText(text):
     hashed_bytes = bcrypt.hashpw(text.encode('utf-8'), bcrypt.gensalt())
