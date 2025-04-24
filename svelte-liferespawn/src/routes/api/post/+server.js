@@ -1,5 +1,3 @@
-import { json } from '@sveltejs/kit';
-
 export const POST = async ({ request, fetch }) => {
     const { endpoint, data } = await request.json();
 
