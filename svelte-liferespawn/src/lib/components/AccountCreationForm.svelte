@@ -3,14 +3,16 @@
 	import { logout } from "$utils/logout";
 	import { PopUp } from "$components";
 
-
 	let username = $state("");
 	let password = $state("");
 
+	let actionAttempted = $state(false);
+
 	let popup;
 
-
 	async function login() {
+		if (!password || !username) return (actionAttempted = true);
+
 		const response = await fetch("/api/post", {
 			method: "POST",
 			body: JSON.stringify({
@@ -26,10 +28,12 @@
 		if (data?.status === "success") {
 			goto("/dashboard");
 		} else {
-			popup.start({text: "Invalid credentials", type: "negative"});
+			popup.start({ text: "Invalid credentials", type: "negative" });
 		}
 	}
 	async function register() {
+		if (!password || !username) return (actionAttempted = true);
+
 		const response = await fetch("/api/post", {
 			method: "POST",
 			body: JSON.stringify({
@@ -42,22 +46,36 @@
 		});
 
 		let data = await response.json();
-		if(data.status === "success") {
-			popup.start({text: "Account successfully registered!", type: "positive"});
-		} else if(data.error === "user already exists") {
-			popup.start({text: "User already exists", type: "negative"});
+		if (data.status === "success") {
+			popup.start({
+				text: "Account successfully registered!",
+				type: "positive",
+			});
+		} else if (data.error === "user already exists") {
+			popup.start({ text: "User already exists", type: "negative" });
 		}
 	}
 </script>
 
-
-<PopUp bind:this={popup}/>
+<PopUp bind:this={popup} />
 
 <div class="wrap">
 	<p class="mini">username</p>
-	<input class:focused={username} type="text" bind:value={username} />
+	<input
+		class:focused={username && !actionAttempted}
+		class:wrong={actionAttempted && !username}
+		type="text"
+		bind:value={username}
+		onfocus={() => {actionAttempted = false}}
+	/>
 	<p class="mini">password</p>
-	<input class:focused={password} type="password" bind:value={password} />
+	<input
+		class:focused={password && !actionAttempted}
+		class:wrong={actionAttempted && !password}
+		type="password"
+		bind:value={password}
+		onfocus={() => {actionAttempted = false}}
+	/>
 	<button onclick={login}>login</button>
 	<button onclick={register}>register</button>
 </div>
@@ -85,6 +103,9 @@
 	input:focus,
 	.focused {
 		outline: 1px solid white;
+	}
+	.wrong {
+		outline: 1px solid red;
 	}
 
 	p {
