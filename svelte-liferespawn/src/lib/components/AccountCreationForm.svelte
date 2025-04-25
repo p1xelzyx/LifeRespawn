@@ -1,9 +1,14 @@
 <script>
 	import { goto } from "$app/navigation";
 	import { logout } from "$utils/logout";
+	import { PopUp } from "$components";
+
 
 	let username = $state("");
 	let password = $state("");
+
+	let popup;
+
 
 	async function login() {
 		const response = await fetch("/api/post", {
@@ -20,6 +25,8 @@
 		let data = await response.json();
 		if (data?.status === "success") {
 			goto("/dashboard");
+		} else {
+			popup.start({text: "Invalid credentials", type: "negative"});
 		}
 	}
 	async function register() {
@@ -34,9 +41,17 @@
 			},
 		});
 
-		console.log(await response.json());
+		let data = await response.json();
+		if(data.status === "success") {
+			popup.start({text: "Account successfully registered!", type: "positive"});
+		} else if(data.error === "user already exists") {
+			popup.start({text: "User already exists", type: "negative"});
+		}
 	}
 </script>
+
+
+<PopUp bind:this={popup}/>
 
 <div class="wrap">
 	<p class="mini">username</p>
@@ -54,6 +69,7 @@
 		width: 300px;
 		color: white;
 		align-items: center;
+		font-size: 1.3em;
 	}
 
 	input {
@@ -85,7 +101,7 @@
 		margin-top: 20px;
 		width: 60%;
 		color: white;
-		background-color: #3a4db4;
+		background-color: var(--main-color);
 		border: 0;
 		border-radius: 15px;
 		padding: 10px;

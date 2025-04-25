@@ -1,5 +1,5 @@
 <script>
-    import { AccountCreationForm } from "$components";
+    import { AccountCreationForm, PopUp } from "$components";
 </script>
 
 <section class="wrap">
@@ -20,10 +20,11 @@
     </div>
 </section>
 
+
 <style>
     h1 {
         text-align: center;
-        color: white;
+        color: var(--main-color);
         font-size: 2em;
         font-weight: 500;
         margin-bottom: 20px;
