@@ -45,7 +45,8 @@
 
 <style>
     div {
-        min-width: 400px;
+        width: 400px;
+        max-width: 100vw;
         background-color: #111111;
         position: fixed;
         left: 50%;
@@ -56,6 +57,7 @@
         border-top-left-radius: 12px;
         border-top-right-radius: 12px;
         box-shadow: 0px 12px 16px 0px #111111;
+        z-index: 10;
     }
     .hidden {
         /*visibility: hidden;*/
