@@ -22,10 +22,12 @@
 
 <style>
     h1 {
+        text-align: center;
         color: white;
         font-size: 2em;
         font-weight: 500;
         margin-bottom: 20px;
+        font-size: 3em;
     }
     .center {
         display: flex;
