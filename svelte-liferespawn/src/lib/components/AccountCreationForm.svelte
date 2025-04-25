@@ -40,9 +40,9 @@
 
 <div class="wrap">
 	<p class="mini">username</p>
-	<input class:focused = {username} type="text" bind:value={username} />
+	<input class:focused={username} type="text" bind:value={username} />
 	<p class="mini">password</p>
-	<input class:focused = {password} type="password" bind:value={password} />
+	<input class:focused={password} type="password" bind:value={password} />
 	<button onclick={login}>login</button>
 	<button onclick={register}>register</button>
 </div>
@@ -55,7 +55,7 @@
 		color: white;
 		align-items: center;
 	}
-	
+
 	input {
 		margin-bottom: 10px;
 		border: none;
@@ -66,7 +66,8 @@
 		color: white;
 		width: 100%;
 	}
-	input:focus, .focused {
+	input:focus,
+	.focused {
 		outline: 1px solid white;
 	}
 
@@ -89,5 +90,41 @@
 		border-radius: 15px;
 		padding: 10px;
 		font-size: 1.1em;
+
+		position: relative;
+		overflow: hidden;
+
+		transition: box-shadow 0.3s ease;
+	}
+
+	button::before {
+		content: "";
+		position: absolute;
+		top: -50%;
+		left: -50%;
+		width: 200%;
+		height: 200%;
+		background: linear-gradient(
+			0deg,
+			transparent,
+			transparent 30%,
+			rgba(0, 255, 255, 0.3)
+		);
+		transform: rotate(-45deg);
+		transition: all 0.3s ease;
+		opacity: 0;
+	}
+
+	button:hover::before {
+		opacity: 1;
+		transform: rotate(-45deg) translateY(150%);
+	}
+
+	button:hover {
+		box-shadow: 0 0 20px #3a4db4;
+	}
+
+	button:active {
+		scale: 1.05;
 	}
 </style>
