@@ -28,7 +28,6 @@
 declare module '$env/static/private' {
 	export const ALLUSERSPROFILE: string;
 	export const APPDATA: string;
-	export const BUNDLED_DEBUGPY_PATH: string;
 	export const ChocolateyInstall: string;
 	export const ChocolateyLastPathUpdate: string;
 	export const CHROME_CRASHPAD_PIPE_NAME: string;
@@ -40,7 +39,7 @@ declare module '$env/static/private' {
 	export const ComSpec: string;
 	export const DriverData: string;
 	export const EDITOR: string;
-	export const EFC_6004: string;
+	export const EFC_6436: string;
 	export const HOME: string;
 	export const HOMEDRIVE: string;
 	export const HOMEPATH: string;
@@ -92,7 +91,6 @@ declare module '$env/static/private' {
 	export const PT7HOME: string;
 	export const PT8HOME: string;
 	export const PUBLIC: string;
-	export const PYDEVD_DISABLE_FILE_VALIDATION: string;
 	export const QT_DEVICE_PIXEL_RATIO: string;
 	export const SESSIONNAME: string;
 	export const SystemDrive: string;
@@ -106,7 +104,6 @@ declare module '$env/static/private' {
 	export const USERNAME: string;
 	export const USERPROFILE: string;
 	export const VBOX_MSI_INSTALL_PATH: string;
-	export const VSCODE_DEBUGPY_ADAPTER_ENDPOINTS: string;
 	export const windir: string;
 	export const ZES_ENABLE_SYSMAN: string;
 	export const __COMPAT_LAYER: string;
@@ -143,7 +140,6 @@ declare module '$env/dynamic/private' {
 	export const env: {
 		ALLUSERSPROFILE: string;
 		APPDATA: string;
-		BUNDLED_DEBUGPY_PATH: string;
 		ChocolateyInstall: string;
 		ChocolateyLastPathUpdate: string;
 		CHROME_CRASHPAD_PIPE_NAME: string;
@@ -155,7 +151,7 @@ declare module '$env/dynamic/private' {
 		ComSpec: string;
 		DriverData: string;
 		EDITOR: string;
-		EFC_6004: string;
+		EFC_6436: string;
 		HOME: string;
 		HOMEDRIVE: string;
 		HOMEPATH: string;
@@ -207,7 +203,6 @@ declare module '$env/dynamic/private' {
 		PT7HOME: string;
 		PT8HOME: string;
 		PUBLIC: string;
-		PYDEVD_DISABLE_FILE_VALIDATION: string;
 		QT_DEVICE_PIXEL_RATIO: string;
 		SESSIONNAME: string;
 		SystemDrive: string;
@@ -221,7 +216,6 @@ declare module '$env/dynamic/private' {
 		USERNAME: string;
 		USERPROFILE: string;
 		VBOX_MSI_INSTALL_PATH: string;
-		VSCODE_DEBUGPY_ADAPTER_ENDPOINTS: string;
 		windir: string;
 		ZES_ENABLE_SYSMAN: string;
 		__COMPAT_LAYER: string;
