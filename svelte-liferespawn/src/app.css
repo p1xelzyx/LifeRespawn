@@ -3,6 +3,7 @@
 *, *::after, *::before {
     --main-color: #5264ca;
     --bg-color: #1b1b1b;
+    --main-gradient: linear-gradient(131deg,rgba(62, 76, 156, 1) 0%, rgba(18, 46, 97, 1) 36%, rgba(47, 67, 161, 1) 76%, rgba(54, 70, 156, 1) 100%);
 
     margin: 0;
     padding: 0;
@@ -10,7 +11,12 @@
     font-weight: 400;
     box-sizing: border-box;
 }
+button {
+    border: none;
+}
 body {
     background-color: var(--bg-color);
     color: white;
+    height: 100vh;
 }
+
