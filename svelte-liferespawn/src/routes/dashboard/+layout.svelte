@@ -83,6 +83,9 @@
     nav ul button:hover {
         background-color: var(--main-color);
     }
+    nav ul button:active {
+        filter: brightness(1.2);
+    }
     nav ul {
         white-space: pre;
         display: flex;
