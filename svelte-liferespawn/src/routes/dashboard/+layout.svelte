@@ -31,9 +31,11 @@
             >
             {#if profileShown}
                 <ul class="profile-dropdown">
-                    <li>Hi</li>
-                    <li>Test</li>
-                    <li>Log out</li>
+                    <li><button>Profile</button></li>
+                    <div class="dropdown-line"></div>
+                    <li><button>Other</button></li>
+                    <div class="dropdown-line"></div>
+                    <li><button onclick={logout} class="logout-button">Log out</button></li>
                 </ul>
             {/if}
         </div>
@@ -96,16 +98,15 @@
         background-color: var(--main-color);
         padding: 10px;
         border-radius: 10px;
-        outline: 2px solid white;
 
     }
 
 
     .profile-button:hover, .profile-opened {
-        outline: 3px solid white;
+        outline: 2px solid white;
     }
     .profile-button:active {
-        outline: 2px solid white;
+        outline: 3px solid white;
     }
 
 
@@ -120,9 +121,37 @@
         position: absolute;
         top: 120%;
         width: 200px;
-        padding: 10px;
+        padding: 12px;
         color: white;
         background-color: rgb(31, 31, 31);
         box-shadow: 0px 7px 22px 2px rgba(0,0,0,0.75);
+        font-size: 1.2em;
+        border-radius: 12px;
+    }
+
+    .profile-dropdown button:not(.logout-button) {
+        font-size: 1em;
+        background-color: unset;
+        color: white;
+    }
+
+    .logout-button {
+        color: red;
+        font-size: 1em;
+        background-color: unset;
+        text-align: end;
+        width: 100%;
+    }
+
+    .profile-dropdown button:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+    .dropdown-line {
+        margin: 10px 0px;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, white, rgba(255, 255, 255, 0));
     }
 </style>
