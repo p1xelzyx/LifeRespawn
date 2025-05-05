@@ -53,47 +53,64 @@
     </nav>
 </header>
 
-{@render children()}
+<div class="middle-page">
+    {@render children()}
+</div>
+
 
 <style>
+    .middle-page {
+        margin: 0px 20px;
+    }
+
+    header {
+        margin: 30px 20px;
+        border-radius: 20px;
+        box-shadow: 0px 4px 20px 8px rgba(0, 0, 0, 0.6);
+        background-color: rgb(20, 20, 20);
+        padding: 20px;
+    }
+
 
     .header-top {
         display: flex;
         justify-content: space-between;
-        padding: 20px 10px;
         align-items: center;
+        margin-bottom: 20px;
     }
     
-    /*.line {
-        height: 2px;
-        background: linear-gradient(90deg, var(--main-color), white);
-    }*/
     .line {
-        display: none;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, white, rgba(255, 255, 255, 0));
     }
 
     nav ul button{
         padding: 10px 20px;
-        background-color: var(--bg-color);
         color: white;
+        background-color: rgba(255, 255, 255, 0.05);
 
         font-size: 1em;
         border: none;
+        white-space: pre;
+        transition: 0.2s all;
+
     }
     nav ul button:hover {
         background-color: var(--main-color);
+        height: 110%;
     }
     nav ul button:active {
         filter: brightness(1.2);
     }
     nav ul {
-        white-space: pre;
         display: flex;
+        flex-wrap: wrap;
         list-style-type: none;
-        /*border-top: 2px solid var(--main-color);
-        border-bottom: 2px solid var(--main-color);*/
-        outline: 3px solid var(--main-color);
     }
+
+
+
     .profile-button {
         color: white;
         font-size: 1.1em;
