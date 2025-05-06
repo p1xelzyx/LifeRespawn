@@ -1,5 +1,7 @@
 <script>
+    import { page } from "$app/state";
     import { logout } from "$utils/logout";
+    import { onMount } from "svelte";
     let { children } = $props();
 
     let profileShown = $state(false);
@@ -17,6 +19,11 @@
             },
         };
     }
+    onMount(() => {
+        console.log(page.url);
+    });
+
+    let currentPage = page.url.pathname.split("/").at(-1);
 </script>
 
 <header>
@@ -43,7 +50,7 @@
     <div class="line"></div>
     <nav>
         <ul>
-            <li><button>DASHBOARD</button></li>
+            <li><button class:nav-button-selected={currentPage === "dashboard"}>DASHBOARD</button></li>
             <li><button>NEW ACTIVITY</button></li>
             <li><button>HISTORY</button></li>
             <li><button>CREDITS</button></li>
@@ -96,9 +103,12 @@
         transition: 0.2s all;
 
     }
-    nav ul button:hover {
+    nav ul button:hover, .nav-button-selected {
         background-color: var(--main-color);
         height: 110%;
+    }
+    nav ul button:hover:not(.nav-button-selected) {
+        cursor: pointer;
     }
     nav ul button:active {
         filter: brightness(1.2);
@@ -125,6 +135,7 @@
     .profile-button:hover, .profile-opened {
         outline: 2px solid white;
     }
+    .profile-button:hover { cursor: pointer; }
     .profile-button:active {
         outline: 3px solid white;
     }

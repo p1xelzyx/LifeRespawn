@@ -12,7 +12,7 @@
         setContext('username', data.username);
 
         if(page.url.pathname === "/") {
-            redirect(303, "/dashboard");
+            redirect(303, "/app");
         }
     } else if(page.url.pathname !== "/") {
         redirect(303, "/");

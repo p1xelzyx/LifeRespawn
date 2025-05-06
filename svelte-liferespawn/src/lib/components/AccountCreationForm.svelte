@@ -26,7 +26,7 @@
 
 		let data = await response.json();
 		if (data?.status === "success") {
-			goto("/dashboard");
+			goto("/app");
 		} else {
 			popup.start({ text: "Invalid credentials", type: "negative" });
 		}
