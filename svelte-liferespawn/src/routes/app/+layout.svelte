@@ -70,6 +70,8 @@
 </div>
 
 <style>
+
+
     .middle-page {
         margin: 0px 20px;
     }
@@ -77,7 +79,7 @@
     header {
         margin: 30px 20px;
         border-radius: 20px;
-        box-shadow: 0px 4px 20px 8px rgba(0, 0, 0, 0.6);
+        box-shadow: 0px 4px 20px 0 rgba(0, 0, 0, 0.6);
         background-color: rgb(20, 20, 20);
         padding: 20px;
     }
