@@ -19,11 +19,8 @@
             },
         };
     }
-    onMount(() => {
-        console.log(page.url);
-    });
 
-    let currentPage = page.url.pathname.split("/").at(-1);
+    let currentPage = $derived(page.url.pathname.split("/").at(-1));
 </script>
 
 <header>
@@ -42,7 +39,11 @@
                     <div class="dropdown-line"></div>
                     <li><button>Other</button></li>
                     <div class="dropdown-line"></div>
-                    <li><button onclick={logout} class="logout-button">Log out</button></li>
+                    <li>
+                        <button onclick={logout} class="logout-button"
+                            >Log out</button
+                        >
+                    </li>
                 </ul>
             {/if}
         </div>
@@ -50,7 +51,11 @@
     <div class="line"></div>
     <nav>
         <ul>
-            <li><button class:nav-button-selected={currentPage === "dashboard"}>DASHBOARD</button></li>
+            <li>
+                <button class:nav-button-selected={currentPage === "dashboard"}
+                    >DASHBOARD</button
+                >
+            </li>
             <li><button>NEW ACTIVITY</button></li>
             <li><button>HISTORY</button></li>
             <li><button>CREDITS</button></li>
@@ -63,7 +68,6 @@
 <div class="middle-page">
     {@render children()}
 </div>
-
 
 <style>
     .middle-page {
@@ -78,21 +82,20 @@
         padding: 20px;
     }
 
-
     .header-top {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 20px;
     }
-    
+
     .line {
         width: 100%;
         height: 2px;
         background: linear-gradient(90deg, white, rgba(255, 255, 255, 0));
     }
 
-    nav ul button{
+    nav ul button {
         padding: 10px 20px;
         color: white;
         background-color: rgba(255, 255, 255, 0.05);
@@ -101,9 +104,9 @@
         border: none;
         white-space: pre;
         transition: 0.2s all;
-
     }
-    nav ul button:hover, .nav-button-selected {
+    nav ul button:hover,
+    .nav-button-selected {
         background-color: var(--main-color);
         height: 110%;
     }
@@ -119,8 +122,6 @@
         list-style-type: none;
     }
 
-
-
     .profile-button {
         color: white;
         font-size: 1.1em;
@@ -128,19 +129,18 @@
         background-color: var(--main-color);
         padding: 10px;
         border-radius: 10px;
-
     }
 
-
-    .profile-button:hover, .profile-opened {
+    .profile-button:hover,
+    .profile-opened {
         outline: 2px solid white;
     }
-    .profile-button:hover { cursor: pointer; }
+    .profile-button:hover {
+        cursor: pointer;
+    }
     .profile-button:active {
         outline: 3px solid white;
     }
-
-
 
     .profile-container {
         position: relative;
@@ -155,7 +155,7 @@
         padding: 12px;
         color: white;
         background-color: rgb(31, 31, 31);
-        box-shadow: 0px 7px 22px 2px rgba(0,0,0,0.75);
+        box-shadow: 0px 7px 22px 2px rgba(0, 0, 0, 0.75);
         font-size: 1.2em;
         border-radius: 12px;
     }
