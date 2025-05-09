@@ -6,13 +6,14 @@
         <p>You can always log your actions at the end of the day down below.</p>
     </div>
     <div class="log-buttons">
-        <button>Log mood</button>
-        <button>Log action</button>
+        <button class="main-color-3d-button">Log mood</button>
+        <button class="main-color-3d-button">Log action</button>
     </div>
 </section>
 
 <section class="app-section section-2">
-    <button> Finish your day </button>
+    <button class="main-color-3d-button"> Finish your day </button>
+    <p>What did you do today?</p>
 </section>
 
 <style>
@@ -26,17 +27,7 @@
         justify-content: space-between;
         flex-wrap: wrap;
     }
-    /*@media only screen and (max-width: 1000px) {
-        .section-1 {
-            flex-direction: column;
-        }
-        .log-buttons {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-    }*/
+
     .log-buttons {
         display: flex;
         justify-content: center;
@@ -47,37 +38,28 @@
     .log-buttons button {
         margin: 40px;
         font-size: 1.3em;
-        color: white;
         width: 150px;
         height: 150px;
         padding: 30px;
-        background-color: var(--main-color);
         border-radius: 50%;
-        box-shadow: 0px 8px 0px 0px rgba(82, 100, 202, 0.6);
-        transition: all 0.1s;
     }
-    .log-buttons button:hover {
-        box-shadow: 0px 5px 0px 0px rgba(82, 100, 202, 0.6);
-        transform: translateY(3px);
-    }
-    .log-buttons button:active {
-        box-shadow: 0px 3px 0px 0px rgba(82, 100, 202, 0.6);
-        transform: translateY(5px);
-    }
+
 
     .section-2 {
         padding: 40px;
         display: flex;
         flex-direction: row;
-        justify-content: center;
+        justify-content: space-evenly;
         align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
     }
-
+    .section-2 p {
+        font-size: 1.3em;
+    }
     .section-2 button {
         padding: 30px;
         font-size: 1.5em;
-        background-color: var(--main-color);
-        color: white;
         border-radius: 20px;
     }
 </style>

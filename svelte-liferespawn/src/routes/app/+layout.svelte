@@ -77,6 +77,8 @@
     }
 
     header {
+        /*position: sticky;
+        top: 30px;*/
         margin: 30px 20px;
         border-radius: 20px;
         box-shadow: 0px 4px 20px 0 rgba(0, 0, 0, 0.6);
@@ -159,7 +161,6 @@
         padding: 12px;
         color: white;
         background-color: rgb(31, 31, 31);
-        box-shadow: 0px 7px 22px 2px rgba(0, 0, 0, 0.75);
         font-size: 1.2em;
         border-radius: 12px;
     }
