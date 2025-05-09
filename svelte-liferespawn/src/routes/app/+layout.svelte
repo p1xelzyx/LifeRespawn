@@ -108,7 +108,6 @@
         border: none;
         white-space: pre;
         transition: 0.2s all;
-        margin-bottom: 5px;
     }
     .nav-button-selected {
         background-color: var(--main-color);
@@ -126,6 +125,7 @@
         display: flex;
         flex-wrap: wrap;
         list-style-type: none;
+        gap: 5px;
     }
 
     .profile-button {
