@@ -106,11 +106,13 @@
         border: none;
         white-space: pre;
         transition: 0.2s all;
+        margin-bottom: 5px;
     }
-    nav ul button:hover,
     .nav-button-selected {
         background-color: var(--main-color);
-        height: 110%;
+    }
+    nav ul button:hover:not(.nav-button-selected) {
+        background-color: black;
     }
     nav ul button:hover:not(.nav-button-selected) {
         cursor: pointer;
