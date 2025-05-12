@@ -59,7 +59,7 @@
 </section>
 
 <Window bind:this={actionWindow}>
-    hello
+    test
 </Window>
 
 
