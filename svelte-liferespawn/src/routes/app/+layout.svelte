@@ -1,7 +1,11 @@
 <script>
+    import { goto } from "$app/navigation";
     import { page } from "$app/state";
     import { logout } from "$utils/logout";
     import { onMount } from "svelte";
+
+    let subPages = ["dashboard", "actions"];
+
     let { children } = $props();
 
     let profileShown = $state(false);
@@ -51,16 +55,11 @@
     <div class="line"></div>
     <nav>
         <ul>
-            <li>
-                <button class:nav-button-selected={currentPage === "dashboard"}
-                    >DASHBOARD</button
-                >
-            </li>
-            <li><button>NEW ACTIVITY</button></li>
-            <li><button>HISTORY</button></li>
-            <li><button>CREDITS</button></li>
-            <li><button>ABOUT</button></li>
-            <li><button>TEST</button></li>
+            {#each subPages as name}
+                <li>
+                    <button onclick={() => goto(name)} class:nav-button-selected={currentPage === name}>{name.toUpperCase()}</button>
+                </li>
+            {/each}
         </ul>
     </nav>
 </header>
