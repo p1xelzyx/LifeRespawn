@@ -1,4 +1,7 @@
-<script></script>
+<script>
+    import { MoodLog } from "$components";
+    let moodLog;
+</script>
 
 <section class="app-section section-1">
     <div class="log-info">
@@ -6,7 +9,7 @@
         <p>You can always log your actions at the end of the day down below.</p>
     </div>
     <div class="log-buttons">
-        <button class="main-color-3d-button">Log mood</button>
+        <button class="main-color-3d-button" onclick={moodLog.show}>Log mood</button>
         <button class="main-color-3d-button">Log action</button>
     </div>
 </section>
@@ -15,6 +18,10 @@
     <button class="main-color-3d-button"> Finish your day </button>
     <p>What did you do today?</p>
 </section>
+
+
+<MoodLog bind:this={moodLog}/>
+
 
 <style>
     .log-info p {
