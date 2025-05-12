@@ -1,4 +1,9 @@
 <script>
+    import { Window } from "$components";
+
+    let actionWindow;
+
+
     const impactLevels = [
         {
             name: "🔴 Harmful",
@@ -41,7 +46,7 @@
 <section class="app-section">
     <div class="top">
         <h1>Your actions</h1>
-        <button class="new-action">New action</button>
+        <button onclick={actionWindow.show} class="new-action">New action</button>
     </div>
     <div class="action-list">
         {#each ". ".repeat(10).split(".") as nc}
@@ -52,6 +57,12 @@
         {/each}
     </div>
 </section>
+
+<Window bind:this={actionWindow}>
+    hello
+</Window>
+
+
 
 <style>
     h1 {
