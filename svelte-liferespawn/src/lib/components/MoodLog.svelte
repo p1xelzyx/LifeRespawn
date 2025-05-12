@@ -22,6 +22,7 @@
 </script>
 
 <div class="wrap" class:hidden={!isShown} class:shown={isShown}>
+    <button></button>
     <div use:clickOutside class="content">
         hello
     </div>
