@@ -1,7 +1,7 @@
 <script>
-    import { Window } from "$components";
+    import { ActionForm } from "$components";
 
-    let actionWindow;
+    let actionForm = $state();
 
 
     const impactLevels = [
@@ -46,7 +46,7 @@
 <section class="app-section">
     <div class="top">
         <h1>Your actions</h1>
-        <button onclick={actionWindow.show} class="new-action">New action</button>
+        <button onclick={actionForm.show} class="new-action">New action</button>
     </div>
     <div class="action-list">
         {#each ". ".repeat(10).split(".") as nc}
@@ -58,9 +58,7 @@
     </div>
 </section>
 
-<Window bind:this={actionWindow}>
-    test
-</Window>
+<ActionForm bind:this={actionForm}/>
 
 
 
