@@ -3,44 +3,6 @@
 
     let actionForm = $state();
 
-
-    const impactLevels = [
-        {
-            name: "🔴 Harmful",
-            description:
-                "This action actively sets you back. It drains energy, causes regret, or reinforces bad habits.",
-        },
-        {
-            name: "🟠 Unhelpful",
-            description:
-                "Time spent here doesn’t contribute to your goals or well-being. Often feels like a waste.",
-        },
-        {
-            name: "🟡 Neutral",
-            description:
-                "Doesn’t help or hurt. Just exists. Sometimes necessary, but not meaningful.",
-        },
-        {
-            name: "🟢 Mildly Beneficial",
-            description:
-                "A small step in the right direction. Feels good, supports your growth a little.",
-        },
-        {
-            name: "✅ Productive",
-            description:
-                "Clearly contributes to your goals. Makes you feel better or closer to who you want to be.",
-        },
-        {
-            name: "💪 Strongly Beneficial",
-            description:
-                "Excellent for long-term growth. Physically, mentally, or emotionally rewarding.",
-        },
-        {
-            name: "🌟 Core Identity",
-            description:
-                "This defines the person you’re trying to become. Deeply aligned with your ideal self.",
-        },
-    ];
 </script>
 
 <section class="app-section">

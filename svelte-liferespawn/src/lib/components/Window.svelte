@@ -1,7 +1,7 @@
 <script>
     import { XIcon } from 'svelte-feather-icons'
 
-    let { children } = $props();
+    let { children, flex } = $props();
 
     let isShown = $state(false);
 
@@ -30,7 +30,7 @@
 </script>
 
 <div class="wrap" class:hidden={!isShown} class:shown={isShown}>
-    <div use:clickOutside class="content">
+    <div use:clickOutside class="content" class:flex>
         <button onclick={hide} class="close-x"><XIcon size=30 strokeWidth=2/></button>
         {@render children()}
     </div>
@@ -59,7 +59,8 @@
         box-shadow: 0 0 25px 4px rgba(0, 0, 0, 0.459);
         position: relative;
         width: 80%;
-        height: 80%;
+        min-height: 80%;
+
         color: white;
         padding: 30px;
         background-color: var(--bg-color);
@@ -68,7 +69,10 @@
 
 
     }
-
+    .flex {
+        display: flex;
+        flex-direction: column;
+    }
     .close-x {
         position: absolute;
         right: 0;

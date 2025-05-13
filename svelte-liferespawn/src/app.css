@@ -12,7 +12,10 @@
     box-sizing: border-box;
 }
 
-button {
+
+
+button,
+input {
     border: none;
 }
 
@@ -45,4 +48,20 @@ body {
 .main-color-3d-button:active {
     box-shadow: 0px 3px 0px 0px rgba(82, 100, 202, 0.6);
     transform: translateY(5px);
+}
+
+
+.window-end-button {
+    font-size: 1.4em;
+    border: 2px solid var(--main-color);
+    color: var(--main-color);
+    border-radius: 15px;
+    padding: 20px;
+    transition: 0.1s all;
+    background-color: transparent;
+}
+
+.window-end-button:hover {
+    color: white;
+    background-color: var(--main-color);
 }
