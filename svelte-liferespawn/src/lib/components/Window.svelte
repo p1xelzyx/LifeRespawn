@@ -1,10 +1,16 @@
 <script>
-    import { XIcon } from 'svelte-feather-icons'
+    import { XIcon } from "svelte-feather-icons";
 
-    let { children, flex } = $props();
+    let {
+        children,
+        flex,
+        width = "auto",
+        height = "auto",
+        minWidth = "auto",
+        minHeight = "auto",
+    } = $props();
 
     let isShown = $state(false);
-
 
     export function show() {
         isShown = true;
@@ -30,14 +36,20 @@
 </script>
 
 <div class="wrap" class:hidden={!isShown} class:shown={isShown}>
-    <div use:clickOutside class="content" class:flex>
-        <button onclick={hide} class="close-x"><XIcon size=30 strokeWidth=2/></button>
+    <div
+        style="--width: {width}; --height: {height}; --minWidth: {minWidth}; --minHeight:{minHeight}"
+        use:clickOutside
+        class="content"
+        class:flex
+    >
+        <button onclick={hide} class="close-x">
+            <XIcon size="30" strokeWidth="2" />
+        </button>
         {@render children()}
     </div>
 </div>
 
 <style>
-
     .hidden {
         display: none;
     }
@@ -55,19 +67,21 @@
         align-items: center;
         backdrop-filter: blur(10px);
     }
+
     .content {
-        box-shadow: 0 0 25px 4px rgba(0, 0, 0, 0.459);
+        box-shadow: 0px 0px 16px -5px rgba(0, 0, 0, 1);
         position: relative;
-        width: 80%;
-        min-height: 80%;
+
+        width: var(--width);
+        height: var(--height);
+        min-width: var(--minWidth);
+        min-height: var(--minHeight);
 
         color: white;
-        padding: 30px;
+        padding: 60px;
         background-color: var(--bg-color);
         border-radius: 15px;
         overflow: hidden;
-
-
     }
     .flex {
         display: flex;
@@ -87,7 +101,4 @@
     .close-x:hover {
         background-color: red;
     }
-
-
-
 </style>

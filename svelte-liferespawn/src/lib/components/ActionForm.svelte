@@ -58,7 +58,6 @@
 <Window flex={true} bind:this={window}>
     <h1>Create your action</h1>
 
-    <div class="flex-wrap">
         <div class="same-row">
             <h2>Name</h2>
 
@@ -75,7 +74,6 @@
                 {/each}
             </select>
         </div>
-    </div>
 
     <p>{impactLevels[selectValue].sign} {impactLevels[selectValue].description}</p>
 
@@ -86,12 +84,6 @@
 </Window>
 
 <style>
-    .flex-wrap {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        gap: 15px;
-    }
 
     h2 {
         color: var(--main-color);
@@ -137,6 +129,7 @@
     p {
         margin: 40px 0;
         font-size: 1.1em;
+        max-width: 500px;
     }
 
     .end-buttons {
