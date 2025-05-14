@@ -50,41 +50,54 @@
     ];
     let selectValue = $state(impactLevels.findIndex((e) => e.selected));
 
-    export function show() {
+    let isEditMode = $state(false);
+    let actionName = $state("");
+
+    export function show(editMode, name) {
+        isEditMode = editMode;
+        actionName = name ?? "";
+
         window.show();
     }
 </script>
 
 <Window flex={true} bind:this={window}>
-    <h1>Create your action</h1>
+    <h1>{isEditMode ? "Edit action" : "Create your action"}</h1>
 
-        <div class="same-row">
-            <h2>Name</h2>
+    <div class="same-row">
+        <h2>Name</h2>
 
-            <input type="text" placeholder="E.g. Watch TV" />
-        </div>
+        <input bind:value={actionName} type="text" placeholder="E.g. Watch TV" />
+    </div>
 
-        <div class="same-row">
-            <h2>Impact on life</h2>
-            <select bind:value={selectValue}>
-                {#each impactLevels as level, i}
-                    <option selected={level.selected} value={i}
-                        >{level.sign} {level.name}</option
-                    >
-                {/each}
-            </select>
-        </div>
+    <div class="same-row">
+        <h2>Impact on life</h2>
+        <select bind:value={selectValue}>
+            {#each impactLevels as level, i}
+                <option selected={level.selected} value={i}
+                    >{level.sign} {level.name}</option
+                >
+            {/each}
+        </select>
+    </div>
 
-    <p>{impactLevels[selectValue].sign} {impactLevels[selectValue].description}</p>
+    <p>
+        {impactLevels[selectValue].sign}
+        {impactLevels[selectValue].description}
+    </p>
 
     <div class="end-buttons">
-        <button class="window-end-button">Cancel</button>
+        {#if isEditMode}
+            <button class="window-end-button-red">Delete</button>
+        {:else}
+            <button class="window-end-button">Cancel</button>
+        {/if}
+
         <button class="window-end-button">Save</button>
     </div>
 </Window>
 
 <style>
-
     h2 {
         color: var(--main-color);
     }
@@ -108,7 +121,8 @@
         color: white;
     }
 
-    input,select {
+    input,
+    select {
         width: 100%;
         max-width: 250px;
     }

@@ -12,7 +12,9 @@
     box-sizing: border-box;
 }
 
-
+button {
+    cursor: pointer;
+}
 
 button,
 input {
@@ -51,17 +53,35 @@ body {
 }
 
 
-.window-end-button {
+.window-end-button,
+.window-end-button-red {
     font-size: 1.4em;
-    border: 2px solid var(--main-color);
-    color: var(--main-color);
     border-radius: 15px;
     padding: 20px;
     transition: 0.1s all;
     background-color: transparent;
 }
 
+
+
+
+.window-end-button {
+    border: 2px solid var(--main-color);
+    color: var(--main-color);
+}
+
 .window-end-button:hover {
     color: white;
     background-color: var(--main-color);
+}
+
+
+.window-end-button-red {
+    color: red;
+    border: 2px solid red;
+}
+
+.window-end-button-red:hover {
+    color: white;
+    background-color: red;
 }

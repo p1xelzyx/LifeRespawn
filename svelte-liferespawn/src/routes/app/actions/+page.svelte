@@ -8,12 +8,12 @@
 <section class="app-section">
     <div class="top">
         <h1>Your actions</h1>
-        <button onclick={actionForm.show} class="new-action">New action</button>
+        <button onclick={() => actionForm.show()} class="new-action">New action</button>
     </div>
     <div class="action-list">
-        {#each ". ".repeat(10).split(".") as nc}
-            <button class="action">
-                <h2>Clean room</h2>
+        {#each "Clean room.".repeat(10).split(".") as nc}
+            <button onclick={() => actionForm.show(true, nc)} class="action">
+                <h2>{nc}</h2>
                 <p>🟢 Mildly Beneficial</p>
             </button>
         {/each}
@@ -39,12 +39,13 @@
         display: flex;
         flex-wrap: wrap;
         gap: 30px;
+        justify-content: center;
     }
 
     .action {
         background-color: var(--bg-color);
         color: white;
-        padding: 20px;
+        padding: 10px;
         border-radius: 11px;
         transition: 0.1s all;
     }
