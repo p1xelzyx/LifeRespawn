@@ -102,7 +102,6 @@ def new_action():
         return jsonify({"status": "fail"})
 
     data = request.json
-    print(user)
 
     vse = actions_table.all()
 
@@ -111,12 +110,7 @@ def new_action():
         if a["id"] > maxId:
             maxId = a["id"]
     
-    actions_table.insert({"id": maxId + 1, "name": data["name"], "impact": data["impact"]})
-
-
-
-
-    
+    actions_table.insert({"id": maxId + 1, "name": data["name"], "impact": data["impact"], "username": user["username"]})
 
     return jsonify({"status": "success"})
 
@@ -129,7 +123,12 @@ def get_actions():
     if not user:
         return jsonify({"status": "fail"})
 
-    return jsonify({"status": "success", "actions": user["actions"]})
+    vse = actions_table.search(User.username == user["username"])
+    print(user)
+    print(user["username"])
+    print(vse)
+
+    return jsonify({"status": "success", "actions": vse})
     
 
 

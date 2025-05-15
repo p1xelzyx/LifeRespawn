@@ -1,1 +1,1 @@
-{"_default": {"1": {"username": "test", "password": "JDJiJDEyJExyLi5udUI1amlIVG1jeHE3V2VJNE9sVmtJRElENFViWG94bHZ2UHhNOWlZTjAyMFN2Nngy", "actions": []}}, "users": {"1": {"username": "test", "password": "JDJiJDEyJE5nZHZVNzJLeEVYMmVkbDkyZ28yUy40MnZVZU9MWHlmaERuWWlGWUtLMk11Sm10cnV5L3hP"}}}
+{"users": {"1": {"username": "test", "password": "JDJiJDEyJC5mLkxlcXFiVGFwR0tSblp2Tmt0THV0R0FtbURhU0R2SWc2SGxNT2hSbTNaLmtLZENMMDBt"}}, "actions": {"1": {"id": 1, "name": "AAAA", "impact": 4, "username": "test"}, "2": {"id": 2, "name": "testa", "impact": 2, "username": "test"}}}

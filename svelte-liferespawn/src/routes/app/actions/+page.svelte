@@ -1,6 +1,9 @@
 <script>
     import { ActionForm } from "$components";
 
+    let { data } = $props();
+    console.log(data);
+
     let actionForm = $state();
 
 </script>
