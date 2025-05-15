@@ -124,10 +124,6 @@ def get_actions():
         return jsonify({"status": "fail"})
 
     vse = actions_table.search(User.username == user["username"])
-    print(user)
-    print(user["username"])
-    print(vse)
-
     return jsonify({"status": "success", "actions": vse})
     
 

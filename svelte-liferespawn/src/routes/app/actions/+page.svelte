@@ -14,9 +14,9 @@
         <button onclick={() => actionForm.show()} class="new-action">New action</button>
     </div>
     <div class="action-list">
-        {#each "Clean room.".repeat(10).split(".") as nc}
-            <button onclick={() => actionForm.show(true, nc)} class="action">
-                <h2>{nc}</h2>
+        {#each data.actions as action}
+            <button onclick={() => actionForm.show(true, action.name)} class="action">
+                <h2>{action.name}</h2>
                 <p>🟢 Mildly Beneficial</p>
             </button>
         {/each}
