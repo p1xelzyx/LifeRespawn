@@ -6,20 +6,21 @@
 
     const { impactLevels } = $props();
 
-    
     let selectValue = $state(impactLevels.findIndex((e) => e.selected));
 
     let isEditMode = $state(false);
     let actionName = $state("");
+    let actionId = $state(-1);
 
     export function show(editMode, action) {
         isEditMode = editMode;
 
-        if(action) {
-            actionName = action.name;   
+        if (action) {
+            actionName = action.name;
             selectValue = action.impact;
+            actionId = action.id;
         }
-        if(!isEditMode) {
+        if (!isEditMode) {
             actionName = "";
             selectValue = 2;
         }
@@ -40,6 +41,27 @@
         });
 
         let data = await response.json();
+        if (data.status === "success") {
+            await invalidateAll();
+            window.hide();
+        }
+    }
+
+    async function deleteAction() {
+        console.log(actionId)
+        const response = await fetch("/api/post", {
+            method: "POST",
+            body: JSON.stringify({
+                endpoint: "delete_action",
+                data: { id: actionId }
+            }),
+            headers: {
+                "content-type": "application/json",
+            },
+        });
+
+        let data = await response.json();
+        console.log(data);
         if (data.status === "success") {
             await invalidateAll();
             window.hide();
@@ -78,10 +100,14 @@
 
     <div class="end-buttons">
         {#if isEditMode}
-            <button class="window-end-button-red">Delete</button>
+            <button class="window-end-button-red" onclick={deleteAction}
+                >Delete</button
+            >
             <button class="window-end-button">Save</button>
         {:else}
-            <button class="window-end-button" onclick={window.hide}>Cancel</button>
+            <button class="window-end-button" onclick={window.hide}
+                >Cancel</button
+            >
             <button class="window-end-button" onclick={sendNewAction}
                 >Save</button
             >

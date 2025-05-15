@@ -126,7 +126,22 @@ def get_actions():
     vse = actions_table.search(User.username == user["username"])
     return jsonify({"status": "success", "actions": vse})
     
+@app.route("/delete_action", methods=["POST"])
+def delete_action():
+    sessionid = request.cookies.get("sessionid")
+    
+    user = user_table.search(User.username == usm.get_user(sessionid))[0]
 
+    data = request.json
+    actions = actions_table.search(User.id == data.get("id"))
+
+    if not user or not actions:
+        return jsonify({"status": "fail"})
+
+    actions_table.remove(User.id == actions[0]["id"])
+
+    return jsonify({"status": "success"})
+    
 
 if __name__ == '__main__':
     app.run(debug=True)
