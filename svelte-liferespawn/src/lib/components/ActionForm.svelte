@@ -59,6 +59,30 @@
 
         window.show();
     }
+
+    async function sendNewAction() {
+        const response = await fetch("/api/post", {
+			method: "POST",
+			body: JSON.stringify({
+				endpoint: "new_action",
+				data: { name: actionName, impact: selectValue },
+			}),
+			headers: {
+				"content-type": "application/json",
+			},
+		});
+
+		let data = await response.json();
+        console.log(data);
+		/*if (data.status === "success") {
+			popup.start({
+				text: "Action saved",
+				type: "positive",
+			});
+		} else {
+			popup.start({ text: "Error", type: "negative" });
+		}*/
+    }
 </script>
 
 <Window flex={true} bind:this={window}>
@@ -67,7 +91,11 @@
     <div class="same-row">
         <h2>Name</h2>
 
-        <input bind:value={actionName} type="text" placeholder="E.g. Watch TV" />
+        <input
+            bind:value={actionName}
+            type="text"
+            placeholder="E.g. Watch TV"
+        />
     </div>
 
     <div class="same-row">
@@ -89,11 +117,13 @@
     <div class="end-buttons">
         {#if isEditMode}
             <button class="window-end-button-red">Delete</button>
+            <button class="window-end-button">Save</button>
         {:else}
             <button class="window-end-button">Cancel</button>
+            <button class="window-end-button" onclick={sendNewAction}
+                >Save</button
+            >
         {/if}
-
-        <button class="window-end-button">Save</button>
     </div>
 </Window>
 

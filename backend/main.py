@@ -6,6 +6,11 @@ from userStateManager import UserStateManager
 
 
 db = TinyDB('../db.json')
+user_table = db.table("users")
+actions_table = db.table("actions")
+
+User = Query()
+
 usm = UserStateManager()
 app = Flask(__name__)
 
@@ -21,11 +26,11 @@ def register():
     if data["username"] == "" or data["password"] == "":
         return jsonify({"status": "fail", "error": "invalid data"})
 
-    User = Query()
-    if db.search(User.username == data["username"]):
+    
+    if user_table.search(User.username == data["username"]):
         return jsonify({"status": "fail", "error": "user already exists"})
     
-    db.insert({"username": data["username"], "password": hashText(data["password"])})
+    user_table.insert({"username": data["username"], "password": hashText(data["password"])})
 
 
     return jsonify({"status": "success"})
@@ -34,8 +39,8 @@ def register():
 def login():
     data = request.json
 
-    User = Query()
-    users = db.search(User.username == data["username"])
+    
+    users = user_table.search(User.username == data["username"])
     
     user = None
     if len(users) > 0:
@@ -87,7 +92,45 @@ def checkHash(hashed_str, normal):
     hashed_bytes = base64.b64decode(hashed_str)
     return bcrypt.checkpw(normal.encode('utf-8'), hashed_bytes)
 
+@app.route("/new_action", methods=["POST"])
+def new_action():
+    sessionid = request.cookies.get("sessionid")
+    
+    user = user_table.search(User.username == usm.get_user(sessionid))[0]
 
+    if not user:
+        return jsonify({"status": "fail"})
+
+    data = request.json
+    print(user)
+
+    vse = actions_table.all()
+
+    maxId = 0
+    for a in vse:
+        if a["id"] > maxId:
+            maxId = a["id"]
+    
+    actions_table.insert({"id": maxId + 1, "name": data["name"], "impact": data["impact"]})
+
+
+
+
+    
+
+    return jsonify({"status": "success"})
+
+@app.route("/get_actions", methods=["POST"])
+def get_actions():
+    sessionid = request.cookies.get("sessionid")
+    
+    user = user_table.search(User.username == usm.get_user(sessionid))[0]
+
+    if not user:
+        return jsonify({"status": "fail"})
+
+    return jsonify({"status": "success", "actions": user["actions"]})
+    
 
 
 if __name__ == '__main__':
