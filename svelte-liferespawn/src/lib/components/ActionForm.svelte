@@ -1,7 +1,8 @@
 <script>
-    import { invalidateAll } from "$app/navigation";
+    import { goto, invalidateAll } from "$app/navigation";
     import { Window } from "$components";
-
+    import { logout } from "$utils/logout";
+    import { redirect } from "@sveltejs/kit";
     let window = $state();
 
     const { impactLevels } = $props();
@@ -39,7 +40,9 @@
                 "content-type": "application/json",
             },
         });
-
+        if(response.status === 401) {
+            return logout();
+        }
         let data = await response.json();
         if (data.status === "success") {
             await invalidateAll();
@@ -48,6 +51,7 @@
     }
 
     async function deleteAction() {
+
         const response = await fetch("/api/post", {
             method: "POST",
             body: JSON.stringify({
@@ -59,6 +63,9 @@
             },
         });
 
+        if(response.status === 401) {
+            return logout();
+        }
         let data = await response.json();
         console.log(data);
         if (data.status === "success") {
@@ -77,7 +84,9 @@
                 "content-type": "application/json",
             },
         });
-
+        if(response.status === 401) {
+            return logout();
+        }
         let data = await response.json();
         console.log(data);
         if (data.status === "success") {

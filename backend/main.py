@@ -96,10 +96,13 @@ def checkHash(hashed_str, normal):
 def new_action():
     sessionid = request.cookies.get("sessionid")
     
-    user = user_table.search(User.username == usm.get_user(sessionid))[0]
+    user = user_table.search(User.username == usm.get_user(sessionid))
+    if(not user):
+        return jsonify({"status": "fail"}), 401
+    else:
+        user = user[0]
 
-    if not user:
-        return jsonify({"status": "fail"})
+
 
     data = request.json
 
@@ -118,10 +121,12 @@ def new_action():
 def get_actions():
     sessionid = request.cookies.get("sessionid")
     
-    user = user_table.search(User.username == usm.get_user(sessionid))[0]
+    user = user_table.search(User.username == usm.get_user(sessionid))
+    if(not user):
+        return jsonify({"status": "fail"}), 401
+    else:
+        user = user[0]
 
-    if not user:
-        return jsonify({"status": "fail"})
 
     vse = actions_table.search(User.username == user["username"])
     return jsonify({"status": "success", "actions": vse})
@@ -130,12 +135,16 @@ def get_actions():
 def delete_action():
     sessionid = request.cookies.get("sessionid")
     
-    user = user_table.search(User.username == usm.get_user(sessionid))[0]
+    user = user_table.search(User.username == usm.get_user(sessionid))
+    if(not user):
+        return jsonify({"status": "fail"}), 401
+    else:
+        user = user[0]
 
     data = request.json
     actions = actions_table.search(User.id == data.get("id"))
 
-    if not user or not actions:
+    if not actions:
         return jsonify({"status": "fail"})
 
     actions_table.remove(User.id == actions[0]["id"])
@@ -147,12 +156,16 @@ def delete_action():
 def edit_action():
     sessionid = request.cookies.get("sessionid")
     
-    user = user_table.search(User.username == usm.get_user(sessionid))[0]
+    user = user_table.search(User.username == usm.get_user(sessionid))
+    if(not user):
+        return jsonify({"status": "fail"}), 401
+    else:
+        user = user[0]
 
     data = request.json
     actions = actions_table.search(User.id == data.get("id"))
 
-    if not user or not actions:
+    if not actions:
         return jsonify({"status": "fail"})
     
     actions_table.update(
