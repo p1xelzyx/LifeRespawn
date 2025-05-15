@@ -28,8 +28,7 @@
 declare module '$env/static/private' {
 	export const ALLUSERSPROFILE: string;
 	export const APPDATA: string;
-	export const ChocolateyInstall: string;
-	export const ChocolateyLastPathUpdate: string;
+	export const BUNDLED_DEBUGPY_PATH: string;
 	export const CHROME_CRASHPAD_PIPE_NAME: string;
 	export const COLOR: string;
 	export const COLORTERM: string;
@@ -39,13 +38,18 @@ declare module '$env/static/private' {
 	export const ComSpec: string;
 	export const DriverData: string;
 	export const EDITOR: string;
-	export const EFC_7152: string;
+	export const FPS_BROWSER_APP_PROFILE_STRING: string;
+	export const FPS_BROWSER_USER_PROFILE_STRING: string;
+	export const GIT_ASKPASS: string;
+	export const GRADLE_HOME: string;
 	export const HOME: string;
 	export const HOMEDRIVE: string;
 	export const HOMEPATH: string;
 	export const INIT_CWD: string;
+	export const JAVA_HOME: string;
 	export const LANG: string;
 	export const LOCALAPPDATA: string;
+	export const LOCAL_GIT_DIRECTORY: string;
 	export const LOGONSERVER: string;
 	export const NODE: string;
 	export const NODE_ENV: string;
@@ -88,10 +92,8 @@ declare module '$env/static/private' {
 	export const ProgramW6432: string;
 	export const PROMPT: string;
 	export const PSModulePath: string;
-	export const PT7HOME: string;
-	export const PT8HOME: string;
 	export const PUBLIC: string;
-	export const QT_DEVICE_PIXEL_RATIO: string;
+	export const PYDEVD_DISABLE_FILE_VALIDATION: string;
 	export const SESSIONNAME: string;
 	export const SystemDrive: string;
 	export const SystemRoot: string;
@@ -104,8 +106,12 @@ declare module '$env/static/private' {
 	export const USERNAME: string;
 	export const USERPROFILE: string;
 	export const VBOX_MSI_INSTALL_PATH: string;
+	export const VSCODE_DEBUGPY_ADAPTER_ENDPOINTS: string;
+	export const VSCODE_GIT_ASKPASS_EXTRA_ARGS: string;
+	export const VSCODE_GIT_ASKPASS_MAIN: string;
+	export const VSCODE_GIT_ASKPASS_NODE: string;
+	export const VSCODE_GIT_IPC_HANDLE: string;
 	export const windir: string;
-	export const ZES_ENABLE_SYSMAN: string;
 }
 
 /**
@@ -139,8 +145,7 @@ declare module '$env/dynamic/private' {
 	export const env: {
 		ALLUSERSPROFILE: string;
 		APPDATA: string;
-		ChocolateyInstall: string;
-		ChocolateyLastPathUpdate: string;
+		BUNDLED_DEBUGPY_PATH: string;
 		CHROME_CRASHPAD_PIPE_NAME: string;
 		COLOR: string;
 		COLORTERM: string;
@@ -150,13 +155,18 @@ declare module '$env/dynamic/private' {
 		ComSpec: string;
 		DriverData: string;
 		EDITOR: string;
-		EFC_7152: string;
+		FPS_BROWSER_APP_PROFILE_STRING: string;
+		FPS_BROWSER_USER_PROFILE_STRING: string;
+		GIT_ASKPASS: string;
+		GRADLE_HOME: string;
 		HOME: string;
 		HOMEDRIVE: string;
 		HOMEPATH: string;
 		INIT_CWD: string;
+		JAVA_HOME: string;
 		LANG: string;
 		LOCALAPPDATA: string;
+		LOCAL_GIT_DIRECTORY: string;
 		LOGONSERVER: string;
 		NODE: string;
 		NODE_ENV: string;
@@ -199,10 +209,8 @@ declare module '$env/dynamic/private' {
 		ProgramW6432: string;
 		PROMPT: string;
 		PSModulePath: string;
-		PT7HOME: string;
-		PT8HOME: string;
 		PUBLIC: string;
-		QT_DEVICE_PIXEL_RATIO: string;
+		PYDEVD_DISABLE_FILE_VALIDATION: string;
 		SESSIONNAME: string;
 		SystemDrive: string;
 		SystemRoot: string;
@@ -215,8 +223,12 @@ declare module '$env/dynamic/private' {
 		USERNAME: string;
 		USERPROFILE: string;
 		VBOX_MSI_INSTALL_PATH: string;
+		VSCODE_DEBUGPY_ADAPTER_ENDPOINTS: string;
+		VSCODE_GIT_ASKPASS_EXTRA_ARGS: string;
+		VSCODE_GIT_ASKPASS_MAIN: string;
+		VSCODE_GIT_ASKPASS_NODE: string;
+		VSCODE_GIT_IPC_HANDLE: string;
 		windir: string;
-		ZES_ENABLE_SYSMAN: string;
 		[key: `PUBLIC_${string}`]: undefined;
 		[key: `${string}`]: string | undefined;
 	}

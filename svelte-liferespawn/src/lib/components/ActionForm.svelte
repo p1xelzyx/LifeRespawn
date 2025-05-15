@@ -1,87 +1,49 @@
 <script>
+    import { invalidateAll } from "$app/navigation";
     import { Window } from "$components";
 
     let window = $state();
 
-    const impactLevels = [
-        {
-            sign: "🔴",
-            name: "Harmful",
-            description:
-                "This action actively sets you back. It drains energy, causes regret, or reinforces bad habits.",
-        },
-        {
-            sign: "🟠",
-            name: "Unhelpful",
-            description:
-                "Time spent here doesn’t contribute to your goals or well-being. Often feels like a waste.",
-        },
-        {
-            sign: "🟡",
-            name: "Neutral",
-            description:
-                "Doesn’t help or hurt. Just exists. Sometimes necessary, but not meaningful.",
-            selected: true,
-        },
-        {
-            sign: "🟢",
-            name: "Mildly Beneficial",
-            description:
-                "A small step in the right direction. Feels good, supports your growth a little.",
-        },
-        {
-            sign: "✅",
-            name: "Productive",
-            description:
-                "Clearly contributes to your goals. Makes you feel better or closer to who you want to be.",
-        },
-        {
-            sign: "💪",
-            name: "Strongly Beneficial",
-            description:
-                "Excellent for long-term growth. Physically, mentally, or emotionally rewarding.",
-        },
-        {
-            sign: "⭐",
-            name: "Core Identity",
-            description:
-                "This defines the person you’re trying to become. Deeply aligned with your ideal self.",
-        },
-    ];
+    const { impactLevels } = $props();
+
+    
     let selectValue = $state(impactLevels.findIndex((e) => e.selected));
 
     let isEditMode = $state(false);
     let actionName = $state("");
 
-    export function show(editMode, name) {
+    export function show(editMode, action) {
         isEditMode = editMode;
-        actionName = name ?? "";
+
+        if(action) {
+            actionName = action.name;   
+            selectValue = action.impact;
+        }
+        if(!isEditMode) {
+            actionName = "";
+            selectValue = 2;
+        }
 
         window.show();
     }
 
     async function sendNewAction() {
         const response = await fetch("/api/post", {
-			method: "POST",
-			body: JSON.stringify({
-				endpoint: "new_action",
-				data: { name: actionName, impact: selectValue },
-			}),
-			headers: {
-				"content-type": "application/json",
-			},
-		});
+            method: "POST",
+            body: JSON.stringify({
+                endpoint: "new_action",
+                data: { name: actionName, impact: selectValue },
+            }),
+            headers: {
+                "content-type": "application/json",
+            },
+        });
 
-		let data = await response.json();
-        console.log(data);
-		/*if (data.status === "success") {
-			popup.start({
-				text: "Action saved",
-				type: "positive",
-			});
-		} else {
-			popup.start({ text: "Error", type: "negative" });
-		}*/
+        let data = await response.json();
+        if (data.status === "success") {
+            await invalidateAll();
+            window.hide();
+        }
     }
 </script>
 
@@ -119,7 +81,7 @@
             <button class="window-end-button-red">Delete</button>
             <button class="window-end-button">Save</button>
         {:else}
-            <button class="window-end-button">Cancel</button>
+            <button class="window-end-button" onclick={window.hide}>Cancel</button>
             <button class="window-end-button" onclick={sendNewAction}
                 >Save</button
             >
