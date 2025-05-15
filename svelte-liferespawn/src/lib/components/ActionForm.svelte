@@ -48,12 +48,30 @@
     }
 
     async function deleteAction() {
-        console.log(actionId)
         const response = await fetch("/api/post", {
             method: "POST",
             body: JSON.stringify({
                 endpoint: "delete_action",
                 data: { id: actionId }
+            }),
+            headers: {
+                "content-type": "application/json",
+            },
+        });
+
+        let data = await response.json();
+        console.log(data);
+        if (data.status === "success") {
+            await invalidateAll();
+            window.hide();
+        }
+    }
+    async function editAction() {
+        const response = await fetch("/api/post", {
+            method: "POST",
+            body: JSON.stringify({
+                endpoint: "edit_action",
+                data: { id: actionId, name: actionName, impact: selectValue }
             }),
             headers: {
                 "content-type": "application/json",
@@ -103,7 +121,7 @@
             <button class="window-end-button-red" onclick={deleteAction}
                 >Delete</button
             >
-            <button class="window-end-button">Save</button>
+            <button class="window-end-button" onclick={editAction}>Save</button>
         {:else}
             <button class="window-end-button" onclick={window.hide}
                 >Cancel</button
