@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, make_response, render_template
 from tinydb import TinyDB, Query
 import bcrypt
 import base64
+from datetime import datetime
 from userStateManager import UserStateManager
 
 
@@ -185,7 +186,9 @@ def save_mood():
 
     novId = newId(mood_log_table.all())
 
-    mood_log_table.insert({"id": novId, "mood": data["level"], "username": user["username"]})
+    zdajStr = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    mood_log_table.insert({"id": novId, "mood": data["level"], "time": zdajStr, "username": user["username"]})
 
 
     return jsonify({"status": "success"})
@@ -203,7 +206,9 @@ def save_action():
 
     novId = newId(action_log_table.all())
 
-    action_log_table.insert({"id": novId, "action_id": data["action_id"], "duration_minutes": data["duration_minutes"], "username": user["username"]})
+    zdajStr = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    action_log_table.insert({"id": novId, "action_id": data["action_id"], "duration_minutes": data["duration_minutes"], "time": zdajStr, "username": user["username"]})
 
     return jsonify({"status": "success"})
 
