@@ -1,62 +1,224 @@
 <script>
     import { Window } from "$components";
     import { impactLevels } from "$lib/data/impactLevels";
+    import { onMount } from "svelte";
+    import { PlusIcon, SearchIcon } from "svelte-feather-icons";
 
     let { actions } = $props();
 
     let window;
-    let scrollbox;
+    let scrollbox = $state();
     let duration = $state({ h: 0, m: 0, s: 0 });
 
     export function show() {
         window.show();
+        selectedAction = -1;
     }
 
+    /** CHAT GPT */
+
+    let scrollTarget = $state(0);
+    let isScrolling = $state(false);
+
+    $inspect(isScrolling);
+
     function scroll(data) {
-        scrollbox.scrollTo({
-            left: scrollbox.scrollLeft + data.deltaY,
-        });
+        data.preventDefault();
+
+        const maxScroll = scrollbox.scrollWidth - scrollbox.clientWidth;
+
+        scrollTarget += data.deltaY;
+        scrollTarget = Math.max(0, Math.min(scrollTarget, maxScroll)); // Clamp target
+
+        startSmoothScroll();
+    }
+
+    function startSmoothScroll() {
+        if (isScrolling) return;
+        isScrolling = true;
+
+        function step() {
+            const current = scrollbox.scrollLeft;
+            const distance = scrollTarget - current;
+
+            scrollbox.scrollLeft += distance * 0.2;
+
+            if (Math.abs(distance) > 2) {
+                requestAnimationFrame(step);
+            } else {
+                scrollbox.scrollLeft = scrollTarget;
+                isScrolling = false;
+            }
+        }
+
+        requestAnimationFrame(step);
+    }
+    function trueScroll() {
+        if (!isScrolling) {
+            scrollTarget = scrollbox.scrollLeft;
+        }
+    }
+
+    /** ---------------- */
+    let actionElements = $state([]);
+    let searchValue = $state("");
+    $effect(() => {
+        for (let e of actionElements) {
+            let parseId = Number(e.id.split("_")[1]);
+
+            if (
+                actions
+                    .find((a) => a.id === parseId)
+                    .name.startsWith(searchValue)
+            ) {
+                e.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center",
+                });
+
+
+                break;
+            }
+        }
+    });
+
+    let selectedAction = $state(-1);
+    function getSelectedAction() {
+        if (selectedAction < 0) return false;
+        return actions[selectedAction];
     }
 </script>
 
 <Window bind:this={window}>
-    <div class="selected-action">
-        <p>Watch TV</p>
-        <p>Productive</p>
-    </div>
-    <div class="action-list" onwheel={scroll} bind:this={scrollbox}>
-        <div class="inside">
-            {#each actions as action}
-                <button>
-                    <h2>{action.name}</h2>
-                    <p>
-                        {impactLevels[action.impact].sign}
-                        {impactLevels[action.impact].name}
-                    </p>
-                </button>
-            {/each}
-        </div>
-    </div>
-    <div class="inputs">
-        <div>
-            <h2>Duration</h2>
-            <div>
-                <input type="number" placeholder="0" />
-                <p>Hours</p>
+    {#if actions.length > 0}
+        {#if selectedAction > -1}
+            <div class="selected-action bg-main-color">
+                <h2>{actions[selectedAction].name}</h2>
+                <p>
+                    {impactLevels[actions[selectedAction].impact].sign}
+                    {impactLevels[actions[selectedAction].impact].name}
+                </p>
             </div>
-            <div>
-                <input type="number" placeholder="0" />
-                <p>Minutes</p>
+        {:else}
+            <div class="no-action">
+                <p>Select action</p>
+            </div>
+        {/if}
+
+        <div style="display: flex; gap: 5px;">
+            <SearchIcon size="20" /><input
+                type="text"
+                class="search"
+                placeholder="Search"
+                bind:value={searchValue}
+            />
+        </div>
+        <div
+            class="action-list"
+            onscroll={trueScroll}
+            onwheel={scroll}
+            bind:this={scrollbox}
+        >
+            <div class="inside">
+                {#each actions as action, i}
+                    <button
+                        bind:this={actionElements[i]}
+                        onclick={() => (selectedAction = i)}
+                        class={selectedAction === i ? "yes-sel" : "not-sel"}
+                        id={"actionId_" + action.id}
+                    >
+                        <h2>{action.name}</h2>
+                        <p>
+                            {impactLevels[action.impact].sign}
+                            {impactLevels[action.impact].name}
+                        </p></button
+                    >
+                {/each}
             </div>
         </div>
-    </div>
+        <div class="inputs">
+            <div>
+                <h2>Duration</h2>
+                <div>
+                    <input type="number" placeholder="0" />
+                    <p>Hours</p>
+                </div>
+                <div>
+                    <input type="number" placeholder="0" />
+                    <p>Minutes</p>
+                </div>
+            </div>
+        </div>
+    {:else}
+        <p>You do not have any actions.</p>
+        <a href="./actions">Create an action <PlusIcon size="20" /></a>
+    {/if}
 </Window>
 
 <style>
+    a {
+        display: inline-block;
+        color: white;
+        font-size: 1em;
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+    }
+
+    .search {
+        outline: none;
+        background-color: transparent;
+        width: 100%;
+        color: white;
+        font-size: 20px;
+    }
+
+    .selected-action {
+        justify-self: center;
+        text-align: center;
+        width: fit-content;
+        margin-bottom: 40px;
+        padding: 20px;
+        border-radius: 20px;
+    }
+
+
+    @keyframes glow {
+        0% {
+            box-shadow: 0 0 0px var(--main-color);
+        }
+        50% {
+            box-shadow: 0 0 20px var(--main-color);
+        }
+        100% {
+            box-shadow: 0 0 0px var(--main-color);
+        }
+    }
+
+    .yes-sel {
+        background-color: var(--main-color);
+    }
+    .not-sel {
+        background-color: rgb(36, 36, 36);
+    }
+
+    .bg-main-color {
+        background-color: var(--main-color);
+    }
+
+    .no-action {
+        background-color: rgb(36, 36, 36);
+        border-radius: 20px;
+        padding: 20px;
+        margin-bottom: 40px;
+    }
+    .no-action p {
+        font-style: italic;
+    }
+
     .action-list {
         margin-bottom: 30px;
-        overflow-x: auto;    
-
+        overflow-x: auto;
         max-width: 500px;
     }
     .inside {
@@ -64,22 +226,20 @@
         display: flex;
         overflow-x: visible;
         width: fit-content;
+        min-width: 100%;
         border-bottom: 2px solid var(--main-color);
         border-top: 2px solid var(--main-color);
     }
-    
 
     .action-list button {
         margin: 10px 20px;
         white-space: nowrap;
-        background-color: transparent;
         padding: 15px;
         color: white;
         border-radius: 10px;
-        background-color: rgb(36, 36, 36);
     }
 
-    input {
+    .inputs input {
         box-sizing: content-box;
         width: 4em;
         font-size: 1.2em;
@@ -92,5 +252,29 @@
 
     .inputs p {
         display: inline-block;
+    }
+
+    ::-webkit-scrollbar {
+        height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    ::-webkit-scrollbar-corner {
+        background: transparent;
+    }
+
+    ::-webkit-scrollbar-button {
+        display: none;
+        background: transparent;
+        height: 0;
+        width: 0;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: rgba(100, 100, 100, 0.6); /* Customize thumb */
+        border-radius: 4px;
     }
 </style>
