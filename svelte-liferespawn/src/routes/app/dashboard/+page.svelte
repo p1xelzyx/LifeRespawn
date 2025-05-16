@@ -1,7 +1,10 @@
 <script>
-    import { MoodLog } from "$components";
+    import { MoodLog, ActionLog } from "$components";
+
+    let { data } = $props();
 
     let moodLog = $state();
+    let actionLog = $state();
 </script>
 
 <section class="app-section section-1">
@@ -13,7 +16,7 @@
         <button class="main-color-3d-button" onclick={moodLog.show}
             >Log mood</button
         >
-        <button class="main-color-3d-button">Log action</button>
+        <button class="main-color-3d-button" onclick={actionLog.show}>Log action</button>
     </div>
 </section>
 
@@ -23,7 +26,7 @@
 </section>
 
 <MoodLog bind:this={moodLog}/>
-
+<ActionLog bind:this={actionLog} actions={data.actions}/>
 
 <style>
     .log-info p {
