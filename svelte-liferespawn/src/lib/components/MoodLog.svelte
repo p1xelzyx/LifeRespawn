@@ -24,8 +24,8 @@
         />
         <h1 style="color: {valueDisplayColor}">{moodValue}/10</h1>
         <div class="form-buttons">
-            <button class="window-end-button">Ok</button>
             <button class="window-end-button" onclick={moodWindow.hide}>Cancel</button>
+            <button class="window-end-button">Ok</button>
         </div>
     </div>
 </Window>

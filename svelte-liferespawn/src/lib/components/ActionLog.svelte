@@ -6,7 +6,7 @@
 
     let { actions } = $props();
 
-    let window;
+    let window = $state();
     let scrollbox = $state();
     let duration = $state({ h: 0, m: 0, s: 0 });
 
@@ -20,7 +20,6 @@
     let scrollTarget = $state(0);
     let isScrolling = $state(false);
 
-    $inspect(isScrolling);
 
     function scroll(data) {
         data.preventDefault();
@@ -69,7 +68,7 @@
             if (
                 actions
                     .find((a) => a.id === parseId)
-                    .name.startsWith(searchValue)
+                    .name.includes(searchValue)
             ) {
                 e.scrollIntoView({
                     behavior: "smooth",
@@ -87,12 +86,17 @@
         if (selectedAction < 0) return false;
         return actions[selectedAction];
     }
+
+
+    function sendActionLog() {
+        // ker action, duration
+    }
 </script>
 
 <Window bind:this={window}>
     {#if actions.length > 0}
         {#if selectedAction > -1}
-            <div class="selected-action bg-main-color">
+            <div class="selected-action">
                 <h2>{actions[selectedAction].name}</h2>
                 <p>
                     {impactLevels[actions[selectedAction].impact].sign}
@@ -149,6 +153,10 @@
                 </div>
             </div>
         </div>
+        <div class="end">
+            <button class="window-end-button" onclick={window.hide}>Cancel</button>
+            <button class="window-end-button" onclick={sendActionLog}>Save</button>
+        </div>
     {:else}
         <p>You do not have any actions.</p>
         <a href="./actions">Create an action <PlusIcon size="20" /></a>
@@ -156,6 +164,17 @@
 </Window>
 
 <style>
+
+    .end {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 30px;
+    }
+    .end button {
+        margin: 20px;
+    }
+
     a {
         display: inline-block;
         color: white;
@@ -174,26 +193,15 @@
     }
 
     .selected-action {
-        justify-self: center;
         text-align: center;
-        width: fit-content;
         margin-bottom: 40px;
         padding: 20px;
         border-radius: 20px;
+        background-color: rgb(36,36,36);
     }
 
 
-    @keyframes glow {
-        0% {
-            box-shadow: 0 0 0px var(--main-color);
-        }
-        50% {
-            box-shadow: 0 0 20px var(--main-color);
-        }
-        100% {
-            box-shadow: 0 0 0px var(--main-color);
-        }
-    }
+ 
 
     .yes-sel {
         background-color: var(--main-color);
@@ -202,9 +210,7 @@
         background-color: rgb(36, 36, 36);
     }
 
-    .bg-main-color {
-        background-color: var(--main-color);
-    }
+
 
     .no-action {
         background-color: rgb(36, 36, 36);

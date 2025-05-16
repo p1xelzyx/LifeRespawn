@@ -57,7 +57,7 @@ body {
 .window-end-button-red {
     font-size: 1.4em;
     border-radius: 15px;
-    padding: 20px;
+    padding: 12px;
     transition: 0.1s all;
     background-color: transparent;
 }

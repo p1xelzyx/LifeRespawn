@@ -12,6 +12,11 @@
 
     let isShown = $state(false);
 
+    $effect(() => {
+        document.body.style.overflowY = isShown ? "hidden" : "";
+    });
+
+
     export function show() {
         isShown = true;
     }
@@ -50,6 +55,7 @@
 </div>
 
 <style>
+
     .hidden {
         display: none;
     }
