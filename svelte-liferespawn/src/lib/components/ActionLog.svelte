@@ -1,14 +1,15 @@
 <script>
     import { Window } from "$components";
     import { impactLevels } from "$lib/data/impactLevels";
-    import { onMount } from "svelte";
+    import { logout } from "$utils/logout";
     import { PlusIcon, SearchIcon } from "svelte-feather-icons";
+    import PopUp from "./PopUp.svelte";
 
     let { actions } = $props();
 
     let window = $state();
     let scrollbox = $state();
-    let duration = $state({ h: 0, m: 0, s: 0 });
+    let duration = $state({ h: 0, m: 0 });
 
     export function show() {
         window.show();
@@ -19,7 +20,6 @@
 
     let scrollTarget = $state(0);
     let isScrolling = $state(false);
-
 
     function scroll(data) {
         data.preventDefault();
@@ -66,15 +66,12 @@
             let parseId = Number(e.id.split("_")[1]);
 
             if (
-                actions
-                    .find((a) => a.id === parseId)
-                    .name.includes(searchValue)
+                actions.find((a) => a.id === parseId).name.includes(searchValue)
             ) {
                 e.scrollIntoView({
                     behavior: "smooth",
                     block: "center",
                 });
-
 
                 break;
             }
@@ -87,12 +84,28 @@
         return actions[selectedAction];
     }
 
-
-    function sendActionLog() {
+    async function sendActionLog() {
         // ker action, duration
+        const response = await fetch("/api/post", {
+            method: "POST",
+            body: JSON.stringify({
+                endpoint: "save_action",
+                data: {
+                    action_id: getSelectedAction()?.id,
+                    duration_minutes: duration.h * 60 + duration.m,
+                },
+            }),
+        });
+        if (response.status === 401) return logout();
+        if (!response.ok) return alert("error");
+
+        let data = await response.json();
+        console.log(data);
+        if (data.status === "success") {
+            window.hide();
+        }
     }
 </script>
-
 <Window bind:this={window}>
     {#if actions.length > 0}
         {#if selectedAction > -1}
@@ -144,18 +157,30 @@
             <div>
                 <h2>Duration</h2>
                 <div>
-                    <input type="number" placeholder="0" />
+                    <input
+                        type="number"
+                        placeholder="0"
+                        bind:value={duration.h}
+                    />
                     <p>Hours</p>
                 </div>
                 <div>
-                    <input type="number" placeholder="0" />
+                    <input
+                        type="number"
+                        placeholder="0"
+                        bind:value={duration.m}
+                    />
                     <p>Minutes</p>
                 </div>
             </div>
         </div>
         <div class="end">
-            <button class="window-end-button" onclick={window.hide}>Cancel</button>
-            <button class="window-end-button" onclick={sendActionLog}>Save</button>
+            <button class="window-end-button" onclick={window.hide}
+                >Cancel</button
+            >
+            <button class="window-end-button" onclick={sendActionLog}
+                >Save</button
+            >
         </div>
     {:else}
         <p>You do not have any actions.</p>
@@ -164,7 +189,6 @@
 </Window>
 
 <style>
-
     .end {
         display: flex;
         justify-content: center;
@@ -197,11 +221,8 @@
         margin-bottom: 40px;
         padding: 20px;
         border-radius: 20px;
-        background-color: rgb(36,36,36);
+        background-color: rgb(36, 36, 36);
     }
-
-
- 
 
     .yes-sel {
         background-color: var(--main-color);
@@ -209,8 +230,6 @@
     .not-sel {
         background-color: rgb(36, 36, 36);
     }
-
-
 
     .no-action {
         background-color: rgb(36, 36, 36);

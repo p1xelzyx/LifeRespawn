@@ -10,6 +10,9 @@
     export function show() {
         moodWindow.show();
     }
+
+
+    
 </script>
 
 <Window bind:this={moodWindow}>

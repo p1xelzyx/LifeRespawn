@@ -148,7 +148,8 @@ def delete_action():
     if not actions:
         return jsonify({"status": "fail"})
 
-    actions_table.remove(query.id == actions[0]["id"])
+    #actions_table.remove(query.id == actions[0]["id"])
+    actions_table.update({"username": ""}, query.id == actions[0]["id"])
 
     return jsonify({"status": "success"})
     
