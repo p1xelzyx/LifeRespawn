@@ -6,10 +6,13 @@ from userStateManager import UserStateManager
 
 
 db = TinyDB('../db.json')
+
 user_table = db.table("users")
 actions_table = db.table("actions")
+action_log_table = db.table("action_logs")
+mood_log_table = db.table("mood_logs")
 
-User = Query()
+query = Query()
 
 usm = UserStateManager()
 app = Flask(__name__)
@@ -27,7 +30,7 @@ def register():
         return jsonify({"status": "fail", "error": "invalid data"})
 
     
-    if user_table.search(User.username == data["username"]):
+    if user_table.search(query.username == data["username"]):
         return jsonify({"status": "fail", "error": "user already exists"})
     
     user_table.insert({"username": data["username"], "password": hashText(data["password"])})
@@ -40,7 +43,7 @@ def login():
     data = request.json
 
     
-    users = user_table.search(User.username == data["username"])
+    users = user_table.search(query.username == data["username"])
     
     user = None
     if len(users) > 0:
@@ -96,7 +99,7 @@ def checkHash(hashed_str, normal):
 def new_action():
     sessionid = request.cookies.get("sessionid")
     
-    user = user_table.search(User.username == usm.get_user(sessionid))
+    user = user_table.search(query.username == usm.get_user(sessionid))
     if(not user):
         return jsonify({"status": "fail"}), 401
     else:
@@ -108,12 +111,9 @@ def new_action():
 
     vse = actions_table.all()
 
-    maxId = 0
-    for a in vse:
-        if a["id"] > maxId:
-            maxId = a["id"]
+    novId = newId(vse)
     
-    actions_table.insert({"id": maxId + 1, "name": data["name"], "impact": data["impact"], "username": user["username"]})
+    actions_table.insert({"id": novId, "name": data["name"], "impact": data["impact"], "username": user["username"]})
 
     return jsonify({"status": "success"})
 
@@ -121,33 +121,33 @@ def new_action():
 def get_actions():
     sessionid = request.cookies.get("sessionid")
     
-    user = user_table.search(User.username == usm.get_user(sessionid))
+    user = user_table.search(query.username == usm.get_user(sessionid))
     if(not user):
         return jsonify({"status": "fail"}), 401
     else:
         user = user[0]
 
 
-    vse = actions_table.search(User.username == user["username"])
+    vse = actions_table.search(query.username == user["username"])
     return jsonify({"status": "success", "actions": vse})
     
 @app.route("/delete_action", methods=["POST"])
 def delete_action():
     sessionid = request.cookies.get("sessionid")
     
-    user = user_table.search(User.username == usm.get_user(sessionid))
+    user = user_table.search(query.username == usm.get_user(sessionid))
     if(not user):
         return jsonify({"status": "fail"}), 401
     else:
         user = user[0]
 
     data = request.json
-    actions = actions_table.search(User.id == data.get("id"))
+    actions = actions_table.search(query.id == data.get("id"))
 
     if not actions:
         return jsonify({"status": "fail"})
 
-    actions_table.remove(User.id == actions[0]["id"])
+    actions_table.remove(query.id == actions[0]["id"])
 
     return jsonify({"status": "success"})
     
@@ -156,25 +156,74 @@ def delete_action():
 def edit_action():
     sessionid = request.cookies.get("sessionid")
     
-    user = user_table.search(User.username == usm.get_user(sessionid))
-    if(not user):
+    user = validateUser(sessionid)
+    if not user:
         return jsonify({"status": "fail"}), 401
-    else:
-        user = user[0]
 
     data = request.json
-    actions = actions_table.search(User.id == data.get("id"))
+    actions = actions_table.search(query.id == data.get("id"))
 
     if not actions:
         return jsonify({"status": "fail"})
     
     actions_table.update(
         {'impact': data['impact'], 'name': data['name']},
-        User.id == data['id']
+        query.id == data['id']
     )
 
     return jsonify({"status": "success"})
 
+@app.route("/save_mood", methods=["POST"])
+def save_mood():
+    sessionid = request.cookies.get("sessionid")
+    
+    user = validateUser(sessionid)
+    if not user:
+        return jsonify({"status": "fail"}), 401
+
+    data = request.json
+
+    novId = newId(mood_log_table.all())
+
+    mood_log_table.insert({"id": novId, "mood": data["level"], "username": user["username"]})
+
+
+    return jsonify({"status": "success"})
+
+
+@app.route("/save_action", methods=["POST"])
+def save_action():
+    sessionid = request.cookies.get("sessionid")
+
+    user = validateUser(sessionid)
+    if not user:
+        return jsonify({"status": "fail"}), 401
+    
+    data = request.json # rabmo action id pa duration
+
+    novId = newId(action_log_table.all())
+
+    action_log_table.insert({"id": novId, "action_id": data["action_id"], "duration_minutes": data["duration_minutes"], "username": user["username"]})
+
+    return jsonify({"status": "success"})
+
+
+
+def newId(sez: list[object]):
+    minId = 0
+    for e in sez:
+        if e["id"] > minId: minId = e["id"]
+    return minId + 1
+
+
+def validateUser(sessionid):
+    user = user_table.search(query.username == usm.get_user(sessionid))
+    if not user:
+        return False
+    
+    return user[0]
+
 if __name__ == '__main__':
     app.run(debug=True)
+
 
