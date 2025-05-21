@@ -98,7 +98,6 @@
 
 <Window flex={true} bind:this={window}>
     <h1>{isEditMode ? "Edit action" : "Create your action"}</h1>
-
     <div class="same-row">
         <h2>Name</h2>
 

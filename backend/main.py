@@ -209,7 +209,8 @@ def save_action():
 
     zdajStr = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    action_log_table.insert({"id": novId, "action_id": data["action_id"], "duration_minutes": data["duration_minutes"], "time": zdajStr, "username": user["username"]})
+    action_log_table.insert({"id": novId, "action_id": data["action_id"], "duration_minutes": data.get("duration_minutes", False), "time": zdajStr, "username": user["username"]})
+
 
     return jsonify({"status": "success"})
 

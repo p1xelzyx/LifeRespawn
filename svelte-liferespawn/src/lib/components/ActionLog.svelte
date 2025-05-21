@@ -9,7 +9,13 @@
 
     let window = $state();
     let scrollbox = $state();
+
+    let durationEnabled = $state(true);
     let duration = $state({ h: 0, m: 0 });
+
+    $effect(() => {
+        if(!durationEnabled) duration = {h: 0, m: 0};
+    });
 
     export function show() {
         window.show();
@@ -92,7 +98,7 @@
                 endpoint: "save_action",
                 data: {
                     action_id: getSelectedAction()?.id,
-                    duration_minutes: duration.h * 60 + duration.m,
+                    duration_minutes: durationEnabled ? duration.h * 60 + duration.m : false,
                 },
             }),
         });
@@ -105,7 +111,10 @@
             window.hide();
         }
     }
+
+
 </script>
+
 <Window bind:this={window}>
     {#if actions.length > 0}
         {#if selectedAction > -1}
@@ -155,22 +164,31 @@
         </div>
         <div class="inputs">
             <div>
-                <h2>Duration</h2>
-                <div>
+                <div class="duration-title-div">
+                    <h2>Duration</h2>
                     <input
-                        type="number"
-                        placeholder="0"
-                        bind:value={duration.h}
+                        type="checkbox"
+                        bind:checked={durationEnabled}
+                        class="duration-checkbox"
                     />
-                    <p>Hours</p>
                 </div>
-                <div>
-                    <input
-                        type="number"
-                        placeholder="0"
-                        bind:value={duration.m}
-                    />
-                    <p>Minutes</p>
+                <div class:disabled={!durationEnabled}>
+                    <div>
+                        <input
+                            type="number"
+                            min=0
+                            bind:value={duration.h}
+                        />
+                        <p>Hours</p>
+                    </div>
+                    <div>
+                        <input
+                            type="number"
+                            min=0
+                            bind:value={duration.m}
+                        />
+                        <p>Minutes</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -189,6 +207,20 @@
 </Window>
 
 <style>
+    .disabled {
+        opacity: 0.7;
+        pointer-events: none;
+    }
+
+    .duration-title-div {
+        display: flex;
+        align-items: center;
+    }
+    .duration-checkbox {
+        width: 20px;
+        height: 20px;
+    }
+
     .end {
         display: flex;
         justify-content: center;
