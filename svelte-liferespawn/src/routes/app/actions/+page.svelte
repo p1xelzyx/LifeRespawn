@@ -13,7 +13,7 @@
     <div class="top">
         <h1>Your actions</h1>
         <button onclick={() => actionForm.show()} class="new-action"
-            >New action</button
+            >NEW ACTION</button
         >
     </div>
     <div class="action-list">
@@ -51,6 +51,7 @@
 
     .top {
         display: flex;
+        align-items: center;
         justify-content: space-between;
         margin-bottom: 60px;
     }
@@ -79,7 +80,7 @@
     }
 
     .new-action {
-        font-size: 1.5em;
+        font-size: 1.3em;
         color: var(--main-color);
         background-color: transparent;
         padding: 15px;

@@ -168,7 +168,7 @@
     input,
     select {
         width: 100%;
-        max-width: 250px;
+        max-width: fit-content;
     }
 
     .same-row {
