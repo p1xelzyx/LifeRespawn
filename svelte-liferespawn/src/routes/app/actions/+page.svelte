@@ -4,7 +4,6 @@
     import { impactLevels } from "$lib/data/impactLevels.js";
 
     let { data } = $props();
-    console.log(data);
 
     let actionForm = $state();
 </script>
