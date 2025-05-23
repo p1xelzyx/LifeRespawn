@@ -1,5 +1,5 @@
 <script>
-    import { Window } from "$components";
+    import { Window, ActionList } from "$components";
     import { impactLevels } from "$lib/data/impactLevels";
     import { logout } from "$utils/logout";
     import { PlusIcon, SearchIcon } from "svelte-feather-icons";
@@ -9,6 +9,7 @@
 
     let window = $state();
     let scrollbox = $state();
+    let actionList = $state();
 
     let durationEnabled = $state(true);
     let duration = $state({ h: 0, m: 0 });
@@ -22,73 +23,13 @@
         selectedAction = -1;
     }
 
-    /** CHAT GPT */
 
-    let scrollTarget = $state(0);
-    let isScrolling = $state(false);
 
-    function scroll(data) {
-        data.preventDefault();
+    
+    let selectedAction = $derived(actionList?.getSelectedAction());
+    
 
-        const maxScroll = scrollbox.scrollWidth - scrollbox.clientWidth;
 
-        scrollTarget += data.deltaY;
-        scrollTarget = Math.max(0, Math.min(scrollTarget, maxScroll)); // Clamp target
-
-        startSmoothScroll();
-    }
-
-    function startSmoothScroll() {
-        if (isScrolling) return;
-        isScrolling = true;
-
-        function step() {
-            const current = scrollbox.scrollLeft;
-            const distance = scrollTarget - current;
-
-            scrollbox.scrollLeft += distance * 0.2;
-
-            if (Math.abs(distance) > 2) {
-                requestAnimationFrame(step);
-            } else {
-                scrollbox.scrollLeft = scrollTarget;
-                isScrolling = false;
-            }
-        }
-
-        requestAnimationFrame(step);
-    }
-    function trueScroll() {
-        if (!isScrolling) {
-            scrollTarget = scrollbox.scrollLeft;
-        }
-    }
-
-    /** ---------------- */
-    let actionElements = $state([]);
-    let searchValue = $state("");
-    $effect(() => {
-        for (let e of actionElements) {
-            let parseId = Number(e.id.split("_")[1]);
-
-            if (
-                actions.find((a) => a.id === parseId).name.includes(searchValue)
-            ) {
-                e.scrollIntoView({
-                    behavior: "smooth",
-                    block: "center",
-                });
-
-                break;
-            }
-        }
-    });
-
-    let selectedAction = $state(-1);
-    function getSelectedAction() {
-        if (selectedAction < 0) return false;
-        return actions[selectedAction];
-    }
 
     async function sendActionLog() {
         // ker action, duration
@@ -97,7 +38,7 @@
             body: JSON.stringify({
                 endpoint: "save_action",
                 data: {
-                    action_id: getSelectedAction()?.id,
+                    action_id: selectedAction.id,
                     duration_minutes: durationEnabled ? duration.h * 60 + duration.m : false,
                 },
             }),
@@ -117,12 +58,12 @@
 
 <Window bind:this={window}>
     {#if actions.length > 0}
-        {#if selectedAction > -1}
+        {#if selectedAction?.name}
             <div class="selected-action">
-                <h2>{actions[selectedAction].name}</h2>
+                <h2>{selectedAction.name}</h2>
                 <p>
-                    {impactLevels[actions[selectedAction].impact].sign}
-                    {impactLevels[actions[selectedAction].impact].name}
+                    {impactLevels[selectedAction.impact].sign}
+                    {impactLevels[selectedAction.impact].name}
                 </p>
             </div>
         {:else}
@@ -131,37 +72,8 @@
             </div>
         {/if}
 
-        <div style="display: flex; gap: 5px;">
-            <SearchIcon size="20" /><input
-                type="text"
-                class="search"
-                placeholder="Search"
-                bind:value={searchValue}
-            />
-        </div>
-        <div
-            class="action-list"
-            onscroll={trueScroll}
-            onwheel={scroll}
-            bind:this={scrollbox}
-        >
-            <div class="inside">
-                {#each actions as action, i}
-                    <button
-                        bind:this={actionElements[i]}
-                        onclick={() => (selectedAction = i)}
-                        class={selectedAction === i ? "yes-sel" : "not-sel"}
-                        id={"actionId_" + action.id}
-                    >
-                        <h2>{action.name}</h2>
-                        <p>
-                            {impactLevels[action.impact].sign}
-                            {impactLevels[action.impact].name}
-                        </p></button
-                    >
-                {/each}
-            </div>
-        </div>
+       
+        <ActionList bind:this={actionList} {actions}/>
         <div class="inputs">
             <div>
                 <div class="duration-title-div">
@@ -240,13 +152,7 @@
         align-items: center;
     }
 
-    .search {
-        outline: none;
-        background-color: transparent;
-        width: 100%;
-        color: white;
-        font-size: 20px;
-    }
+    
 
     .selected-action {
         text-align: center;
@@ -256,12 +162,6 @@
         background-color: rgb(36, 36, 36);
     }
 
-    .yes-sel {
-        background-color: var(--main-color);
-    }
-    .not-sel {
-        background-color: rgb(36, 36, 36);
-    }
 
     .no-action {
         background-color: rgb(36, 36, 36);
@@ -273,28 +173,7 @@
         font-style: italic;
     }
 
-    .action-list {
-        margin-bottom: 30px;
-        overflow-x: auto;
-        max-width: 500px;
-    }
-    .inside {
-        margin-bottom: 20px;
-        display: flex;
-        overflow-x: visible;
-        width: fit-content;
-        min-width: 100%;
-        border-bottom: 2px solid var(--main-color);
-        border-top: 2px solid var(--main-color);
-    }
-
-    .action-list button {
-        margin: 10px 20px;
-        white-space: nowrap;
-        padding: 15px;
-        color: white;
-        border-radius: 10px;
-    }
+   
 
     .inputs input {
         box-sizing: content-box;
@@ -311,27 +190,4 @@
         display: inline-block;
     }
 
-    ::-webkit-scrollbar {
-        height: 10px;
-    }
-
-    ::-webkit-scrollbar-track {
-        background: transparent;
-    }
-
-    ::-webkit-scrollbar-corner {
-        background: transparent;
-    }
-
-    ::-webkit-scrollbar-button {
-        display: none;
-        background: transparent;
-        height: 0;
-        width: 0;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background-color: rgba(100, 100, 100, 0.6); /* Customize thumb */
-        border-radius: 4px;
-    }
 </style>
