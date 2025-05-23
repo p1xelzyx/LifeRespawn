@@ -53,7 +53,7 @@
                             at least {goal.amount}
                             {goal.amount === 1 ? "time" : "times"} per day
                         {:else}
-                            at least {Math.floor(goal.duration / 60)}h {goal.duration &
+                            at least {Math.floor(goal.duration / 60)}h {goal.duration %
                                 60}min per day
                         {/if}
                     {:else if goal.amount === 0 && goal.duration === 0}
@@ -62,7 +62,7 @@
                         max {goal.amount}
                         {goal.amount === 1 ? "time" : "times"} per day
                     {:else}
-                        max {Math.floor(goal.duration / 60)}h {goal.duration &
+                        max {Math.floor(goal.duration / 60)}h {goal.duration %
                             60}min per day
                     {/if}
                 </h3>
