@@ -124,6 +124,14 @@
         background-color: rgb(36, 36, 36);
     }
 
+    .not-sel:hover {
+        transition: 0.1s all;
+        background-color: rgb(50, 50, 50);
+    }
+
+
+    
+
 
     .action-list {
         margin-bottom: 30px;
