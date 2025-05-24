@@ -2,7 +2,7 @@
     import { impactLevels } from "$lib/data/impactLevels";
     import { PlusIcon, SearchIcon } from "svelte-feather-icons";
 
-    let { actions, selectedAction=-1 } = $props();
+    let { actions, selectedAction = -1 } = $props();
 
     let scrollbox = $state();
 
@@ -62,7 +62,6 @@
                     behavior: "smooth",
                     block: "center",
                 });
-
                 break;
             }
         }
@@ -71,7 +70,6 @@
     export function getSelectedAction() {
         return actions[selectedAction];
     }
-
 </script>
 
 <div style="display: flex; gap: 5px;">
@@ -94,6 +92,8 @@
                 bind:this={actionElements[i]}
                 onclick={() => (selectedAction = i)}
                 class={selectedAction === i ? "yes-sel" : "not-sel"}
+                class:searched-item={action.name.includes(searchValue) &&
+                    searchValue !== ""}
                 id={"actionId_" + action.id}
             >
                 <h2>{action.name}</h2>
@@ -107,6 +107,10 @@
 </div>
 
 <style>
+    .searched-item {
+        transform: translateY(-5px);
+        transition: 0.1s all;
+    }
 
     .search {
         outline: none;
@@ -115,7 +119,6 @@
         color: white;
         font-size: 20px;
     }
-
 
     .yes-sel {
         background-color: var(--main-color);
@@ -129,14 +132,9 @@
         background-color: rgb(50, 50, 50);
     }
 
-
-    
-
-
     .action-list {
         margin-bottom: 30px;
         overflow-x: auto;
-        max-width: 500px;
     }
     .inside {
         margin-bottom: 20px;

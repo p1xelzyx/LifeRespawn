@@ -77,10 +77,22 @@
         {/if}
         <ArrowRightIcon />
         <h2>PER DAY</h2>
+
+        <div class="end-buttons">
+            <button class="window-end-button">Cancel</button>
+            <button class="window-end-button">Save</button>
+        </div>
     </div>
 </Window>
 
 <style>
+    .end-buttons {
+        display: flex;
+    }
+    .window-end-button {
+        margin: 20px;
+    }
+
     .top {
         display: flex;
         justify-content: space-between;

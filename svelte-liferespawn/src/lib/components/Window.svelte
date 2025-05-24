@@ -89,7 +89,7 @@
     }
     @media only screen and (max-width: 600px) {
         .content {
-            padding: 20px;
+            padding: 60px 20px;
         }
     }
 
