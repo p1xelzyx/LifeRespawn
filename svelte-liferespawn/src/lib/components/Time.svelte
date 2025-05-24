@@ -1,14 +1,28 @@
 <script>
-    import { AlertTriangleIcon } from "svelte-feather-icons";
+    import {
+        AlertTriangleIcon,
+        ChevronDownIcon,
+        ChevronUpIcon,
+    } from "svelte-feather-icons";
 
     const hoursArr = Array.from({ length: 25 }, (_, i) => i);
     const minutesArr = Array.from({ length: 61 }, (_, i) => i);
-    let resetScrollTMID = 0;
 
-    function animatedScroll(node, dontFix) {
+    let selectedHour = $state();
+    let selectedMinute = $state();
+
+    $inspect(selectedHour);
+    $inspect(selectedMinute);
+
+
+
+    function animatedScroll(node, isHours) {
         $effect(() => {
-            console.log(node.scrollTop);
 
+
+            
+
+            let resetScrollTMID = 0;
             let startingDragY;
             let startingY;
             let animateTouchId;
@@ -16,17 +30,34 @@
             let animFrameId = 0;
             let isDragging = false;
 
+            function setTop(target) {
+                node.scrollTop = target;
+
+                if(isHours) {
+                    selectedHour = Math.round(target / 30);
+                } else {
+                    selectedMinute = Math.round(target / 30);
+                }
+
+            }
+
             function scrollTo(target, dontFix) {
-                console.log(dontFix ? "DONT FIX" : "YES");
                 cancelAnimationFrame(animFrameId);
                 function step() {
                     const dif = target - node.scrollTop;
-                    node.scrollTop +=
+                    /*node.scrollTop +=
                         dif < 0
                             ? Math.min(-1, dif * 0.2)
-                            : Math.max(1, dif * 0.2);
+                            : Math.max(1, dif * 0.2);*/
+                    setTop(
+                        node.scrollTop +
+                            (dif < 0
+                                ? Math.min(-1, dif * 0.2)
+                                : Math.max(1, dif * 0.2)),
+                    );
                     if (Math.abs(target - node.scrollTop) < 2) {
-                        node.scrollTop = target;
+                        /*node.scrollTop = target;*/
+                        setTop(target);
                         window.cancelAnimationFrame(animFrameId);
                     } else {
                         animFrameId = window.requestAnimationFrame(step);
@@ -77,7 +108,8 @@
                 let y = e.touches[0].clientY;
 
                 velocity = (50 * (prevTouch - y)) / (now - prevTime);
-                node.scrollTop = startingY + startingDragY - y;
+                /*node.scrollTop = startingY + startingDragY - y;*/
+                setTop(startingY + startingDragY - y);
                 //scrollTo(startingY + startingDragY - y, true);
 
                 prevTouch = y;
@@ -91,13 +123,14 @@
             function handleTouchCancel(e) {
                 isDragging = false;
                 animateTouchId = window.requestAnimationFrame(animateTouch);
-                console.log("hi")
+                console.log("hi");
             }
-            
+
             function animateTouch() {
                 if (Math.abs(velocity) > 3) {
                     velocity *= 0.95;
-                    node.scrollTop += velocity / 10;
+                    /*node.scrollTop += velocity / 10;*/
+                    setTop(node.scrollTop + (velocity / 10));
                     animateTouchId = window.requestAnimationFrame(animateTouch);
                 } else {
                     window.cancelAnimationFrame(animFrameId);
@@ -129,20 +162,20 @@
 </script>
 
 <div class="wrap">
-    <div class="scroll" use:animatedScroll>
-        <p>&nbsp;</p>
+    <div class="scroll" use:animatedScroll={true}>
+        <p class="scroll-item"><ChevronDownIcon size="30" /></p>
         {#each hoursArr as h}
-            <p>{h}</p>
+            <p class="scroll-item">{h}</p>
         {/each}
-        <p>&nbsp;</p>
+        <p class="scroll-item"><ChevronUpIcon size="30" /></p>
     </div>
     <div>:</div>
-    <div class="scroll" use:animatedScroll>
-        <p>&nbsp;</p>
+    <div class="scroll" use:animatedScroll={false}>
+        <p class="scroll-item"><ChevronDownIcon size="30" /></p>
         {#each minutesArr as m}
-            <p>{m}</p>
+            <p class="scroll-item">{m}</p>
         {/each}
-        <p>&nbsp;</p>
+        <p class="scroll-item"><ChevronUpIcon size="30" /></p>
     </div>
 </div>
 
