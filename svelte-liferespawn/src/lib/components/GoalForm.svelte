@@ -27,6 +27,31 @@
     let action = $derived(actionList?.getSelectedAction());
 
     let options = $state({ isPositive: true, isDuration: false });
+
+    async function sendNewGoal() {
+        const response = await fetch("/api/post", {
+            method: "POST",
+            body: JSON.stringify({
+                endpoint: "new_goal",
+                data: {
+                    action_id: action.id,
+                    duration_minutes: options.isDuration
+                        ? selectedHour * 60 + selectedMinute
+                        : false,
+                    amount: !options.isDuration ? times : false,
+                    positive: options.isPositive
+                },
+            }),
+        });
+        if (response.status === 401) return logout();
+        if (!response.ok) return alert("error");
+
+        let data = await response.json();
+        console.log(data);
+        if (data.status === "success") {
+            window.hide();
+        }
+    }
 </script>
 
 <Window bind:this={window}>
@@ -79,8 +104,8 @@
         <h2>PER DAY</h2>
 
         <div class="end-buttons">
-            <button class="window-end-button">Cancel</button>
-            <button class="window-end-button">Save</button>
+            <button class="window-end-button" onclick={() => window.hide()}>Cancel</button>
+            <button class="window-end-button" onclick={sendNewGoal}>Save</button>
         </div>
     </div>
 </Window>

@@ -12,6 +12,7 @@ user_table = db.table("users")
 actions_table = db.table("actions")
 action_log_table = db.table("action_logs")
 mood_log_table = db.table("mood_logs")
+goal_table = db.table("goals")
 
 query = Query()
 
@@ -214,7 +215,21 @@ def save_action():
 
     return jsonify({"status": "success"})
 
+@app.route("/new_goal", methods=["POST"])
+def new_goal():
+    sessionid = request.cookies.get("sessionid")
 
+    user = validateUser(sessionid)
+    if not user:
+        return jsonify({"status": "fail"}), 401
+    
+    data = request.json
+
+    novId = newId(goal_table.all())
+
+    goal_table.insert({"id": novId, "action_id": data["action_id"], "duration_minutes": data.get("duration_minutes", False), "amount": data.get("amount", False), "username": user["username"], "positive": data["positive"]})
+
+    return jsonify({"status": "success"})
 
 def newId(sez: list[object]):
     minId = 0
