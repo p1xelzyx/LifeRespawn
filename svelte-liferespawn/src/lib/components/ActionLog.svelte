@@ -1,9 +1,8 @@
 <script>
-    import { Window, ActionList } from "$components";
+    import { Window, ActionList, Time, PopUp } from "$components";
     import { impactLevels } from "$lib/data/impactLevels";
     import { logout } from "$utils/logout";
     import { PlusIcon, SearchIcon } from "svelte-feather-icons";
-    import PopUp from "./PopUp.svelte";
 
     let { actions } = $props();
 
@@ -11,11 +10,20 @@
     let scrollbox = $state();
     let actionList = $state();
 
+    let selectedMinute = $state(0);
+    let selectedHour = $state(0);
+
+    $inspect(selectedHour);
+    $inspect(selectedMinute);
+
     let durationEnabled = $state(true);
-    let duration = $state({ h: 0, m: 0 });
+
+    let timeNode = $state();
 
     $effect(() => {
-        if(!durationEnabled) duration = {h: 0, m: 0};
+        if (!durationEnabled) {
+            timeNode.resetTime();
+        }
     });
 
     export function show() {
@@ -23,23 +31,22 @@
         selectedAction = -1;
     }
 
-
-
-    
     let selectedAction = $derived(actionList?.getSelectedAction());
-    
-
-
 
     async function sendActionLog() {
         // ker action, duration
+        console.log(
+            durationEnabled ? selectedHour * 60 + selectedMinute : false,
+        );
         const response = await fetch("/api/post", {
             method: "POST",
             body: JSON.stringify({
                 endpoint: "save_action",
                 data: {
                     action_id: selectedAction.id,
-                    duration_minutes: durationEnabled ? duration.h * 60 + duration.m : false,
+                    duration_minutes: durationEnabled
+                        ? selectedHour * 60 + selectedMinute
+                        : false,
                 },
             }),
         });
@@ -52,8 +59,6 @@
             window.hide();
         }
     }
-
-
 </script>
 
 <Window bind:this={window}>
@@ -72,8 +77,7 @@
             </div>
         {/if}
 
-       
-        <ActionList bind:this={actionList} {actions}/>
+        <ActionList bind:this={actionList} {actions} />
         <div class="inputs">
             <div>
                 <div class="duration-title-div">
@@ -85,22 +89,11 @@
                     />
                 </div>
                 <div class:disabled={!durationEnabled}>
-                    <div>
-                        <input
-                            type="number"
-                            min=0
-                            bind:value={duration.h}
-                        />
-                        <p>Hours</p>
-                    </div>
-                    <div>
-                        <input
-                            type="number"
-                            min=0
-                            bind:value={duration.m}
-                        />
-                        <p>Minutes</p>
-                    </div>
+                    <Time
+                        bind:this={timeNode}
+                        bind:selectedHour
+                        bind:selectedMinute
+                    />
                 </div>
             </div>
         </div>
@@ -127,6 +120,7 @@
     .duration-title-div {
         display: flex;
         align-items: center;
+        margin-bottom: 20px;
     }
     .duration-checkbox {
         width: 20px;
@@ -152,8 +146,6 @@
         align-items: center;
     }
 
-    
-
     .selected-action {
         text-align: center;
         margin-bottom: 40px;
@@ -161,7 +153,6 @@
         border-radius: 20px;
         background-color: rgb(36, 36, 36);
     }
-
 
     .no-action {
         background-color: rgb(36, 36, 36);
@@ -173,8 +164,6 @@
         font-style: italic;
     }
 
-   
-
     .inputs input {
         box-sizing: content-box;
         width: 4em;
@@ -185,9 +174,4 @@
         border-bottom: 2px solid var(--main-color);
         margin-right: 10px;
     }
-
-    .inputs p {
-        display: inline-block;
-    }
-
 </style>

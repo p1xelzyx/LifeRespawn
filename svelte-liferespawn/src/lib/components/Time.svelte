@@ -11,6 +11,17 @@
     const hoursArr = Array.from({ length: 25 }, (_, i) => i);
     const minutesArr = Array.from({ length: 61 }, (_, i) => i);
 
+    let mNode = $state();
+    let hNode = $state();
+
+
+    export function resetTime() {
+        mNode.scrollTop = 0;
+        hNode.scrollTop = 0;
+        selectedHour = 0;
+        selectedMinute = 0;
+    }
+
     function animatedScroll(node, isHours) {
         $effect(() => {
             let resetScrollTMID = 0;
@@ -163,7 +174,7 @@
         <p>Minutes</p>
     </div>
     <div class="time-wrap">
-        <div class="scroll" use:animatedScroll={true}>
+        <div class="scroll" use:animatedScroll={true} bind:this={hNode}>
             <p class="scroll-item out"><ChevronDownIcon size="30" /></p>
             {#each hoursArr as h}
                 <p
@@ -176,7 +187,7 @@
             <p class="scroll-item out"><ChevronUpIcon size="30" /></p>
         </div>
         <div class="seperator">:</div>
-        <div class="scroll" use:animatedScroll={false}>
+        <div class="scroll" use:animatedScroll={false} bind:this={mNode}>
             <p class="scroll-item out"><ChevronDownIcon size="30" /></p>
             {#each minutesArr as m}
                 <p
@@ -205,6 +216,9 @@
     .out {
         color: rgba(255, 255, 255, 0.5);
         scale: 0.8;
+    }
+    .wrap {
+        width: fit-content;
     }
 
     .time-wrap {
