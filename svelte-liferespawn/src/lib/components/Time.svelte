@@ -1,19 +1,24 @@
 <script>
+    import { AlertTriangleIcon } from "svelte-feather-icons";
+
     const hoursArr = Array.from({ length: 25 }, (_, i) => i);
     const minutesArr = Array.from({ length: 61 }, (_, i) => i);
+    let resetScrollTMID = 0;
 
-    function animatedScroll(node) {
+    function animatedScroll(node, dontFix) {
         $effect(() => {
             console.log(node.scrollTop);
 
             let startingDragY;
             let startingY;
-
+            let animateTouchId;
             let scrolling = false;
             let animFrameId = 0;
-            function scrollTo(target) {
-                cancelAnimationFrame(animFrameId);
+            let isDragging = false;
 
+            function scrollTo(target, dontFix) {
+                console.log(dontFix ? "DONT FIX" : "YES");
+                cancelAnimationFrame(animFrameId);
                 function step() {
                     const dif = target - node.scrollTop;
                     node.scrollTop +=
@@ -29,45 +34,79 @@
                 }
                 animFrameId = window.requestAnimationFrame(step);
 
+                clearTimeout(resetScrollTMID);
+                if (!dontFix) {
+                    resetScrollTMID = setTimeout(() => {
+                        window.cancelAnimationFrame(animFrameId);
+                        scrollTo(Math.round(node.scrollTop / 30) * 30, true);
+                    }, 100);
+                }
             }
             let lastScroll = Date.now();
             let toScroll = 30;
-            let resetScrollTMID = 0;
+            let prevScrollSign = 0;
             function handleWheel(e) {
-
                 e.preventDefault();
+                let nowSign = Math.sign(e.deltaY);
                 let now = Date.now();
-                if (now - lastScroll < 80) {
+                if (now - lastScroll < 80 && prevScrollSign == nowSign) {
                     toScroll = Math.min(toScroll * 1.4, 500);
                 } else {
                     toScroll = 30;
                 }
-                clearTimeout(resetScrollTMID);
-                resetScrollTMID = setTimeout(() => {
-                    window.cancelAnimationFrame(animFrameId);
-                    scrollTo(Math.round(node.scrollTop / 30) * 30);
-                }, 100);
-                scrollTo(node.scrollTop + Math.sign(e.deltaY) * toScroll);
 
+                scrollTo(node.scrollTop + nowSign * toScroll);
+
+                prevScrollSign = nowSign;
                 lastScroll = now;
             }
 
+            let velocity = 0;
             function handleTouchStart(e) {
+                velocity = 0;
                 startingDragY = e.touches[0].clientY;
                 startingY = node.scrollTop;
+                isDragging = true;
             }
+
+            let prevTouch = 0;
+            let prevTime = Date.now();
             function handleTouchMove(e) {
                 e.preventDefault();
+                let now = Date.now();
                 let y = e.touches[0].clientY;
-                node.scrollTop = startingY + startingDragY - y;
-            }
-            function handleTouchEnd(e) {
-                //scrollTo(Math.round(node.scrollTop / 30) * 30);
-            }
-            /*function handleTouchCancel(e) {
-            }*/
 
-            //node.addEventListener("touchcancel", handleTouchCancel);
+                velocity = (50 * (prevTouch - y)) / (now - prevTime);
+                node.scrollTop = startingY + startingDragY - y;
+                //scrollTo(startingY + startingDragY - y, true);
+
+                prevTouch = y;
+                prevTime = now;
+            }
+
+            function handleTouchEnd(e) {
+                isDragging = false;
+                animateTouchId = window.requestAnimationFrame(animateTouch);
+            }
+            function handleTouchCancel(e) {
+                isDragging = false;
+                animateTouchId = window.requestAnimationFrame(animateTouch);
+                console.log("hi")
+            }
+            
+            function animateTouch() {
+                if (Math.abs(velocity) > 3) {
+                    velocity *= 0.95;
+                    node.scrollTop += velocity / 10;
+                    animateTouchId = window.requestAnimationFrame(animateTouch);
+                } else {
+                    window.cancelAnimationFrame(animFrameId);
+                    window.cancelAnimationFrame(animateTouchId);
+                    scrollTo(Math.round(node.scrollTop / 30) * 30, true);
+                }
+            }
+
+            node.addEventListener("touchcancel", handleTouchCancel);
             node.addEventListener("touchstart", handleTouchStart);
             node.addEventListener("touchmove", handleTouchMove, {
                 passive: false,
@@ -83,7 +122,7 @@
                 node.removeEventListener("wheel", handleWheel, {
                     passive: false,
                 });
-                //node.removeEventListener("touchcancel", handleTouchCancel);
+                node.removeEventListener("touchcancel", handleTouchCancel);
             };
         });
     }
