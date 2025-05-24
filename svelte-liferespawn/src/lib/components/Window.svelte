@@ -16,7 +16,6 @@
         document.body.style.overflowY = isShown ? "hidden" : "";
     });
 
-
     export function show() {
         isShown = true;
     }
@@ -55,7 +54,6 @@
 </div>
 
 <style>
-
     .hidden {
         display: none;
     }
@@ -89,6 +87,12 @@
         border-radius: 15px;
         overflow: hidden;
     }
+    @media only screen and (max-width: 600px) {
+        .content {
+            padding: 20px;
+        }
+    }
+
     .flex {
         display: flex;
         flex-direction: column;

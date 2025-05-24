@@ -11,10 +11,7 @@
 
     let selectedHour = $state(0);
     let selectedMinute = $state(0);
-
-    $inspect(selectedHour);
-    $inspect(selectedMinute);
-
+    let times = $state(0);
 
     let window = $state();
     let actionList = $state();
@@ -33,25 +30,26 @@
 </script>
 
 <Window bind:this={window}>
-    <h1>New goal</h1>
-    <div class="options">
-        <button
-            class="option-btn"
-            onclick={() => (options.isPositive = !options.isPositive)}
-            class:moveRight={!options.isPositive}
-            ><h2><CheckIcon /> Positive</h2>
-            <h2><XIcon /> Negative</h2></button
-        >
-        <button
-            class="option-btn"
-            onclick={() => (options.isDuration = !options.isDuration)}
-            class:moveRight={!options.isDuration}
-            ><h2><ClockIcon /> Duration</h2>
-            <h2><RepeatIcon /> Amount</h2></button
-        >
+    <div class="top">
+        <h1>New goal</h1>
+        <div class="options">
+            <button
+                class="option-btn"
+                onclick={() => (options.isPositive = !options.isPositive)}
+                class:moveRight={!options.isPositive}
+                ><h2><CheckIcon /> Positive</h2>
+                <h2><XIcon /> Negative</h2></button
+            >
+            <button
+                class="option-btn"
+                onclick={() => (options.isDuration = !options.isDuration)}
+                class:moveRight={!options.isDuration}
+                ><h2><ClockIcon /> Duration</h2>
+                <h2><RepeatIcon /> Amount</h2></button
+            >
+        </div>
     </div>
     <ActionList bind:this={actionList} {actions} />
-
     <div class="goal">
         <h2>DO</h2>
         <ArrowRightIcon />
@@ -65,11 +63,41 @@
         {/if}
         <ArrowRightIcon />
         <h2>{options.isPositive ? "AT LEAST" : "MAX"}</h2>
-        <Time bind:selectedHour={selectedHour} bind:selectedMinute={selectedMinute}/>
+        <ArrowRightIcon />
+        {#if options.isDuration}
+            <Time bind:selectedHour bind:selectedMinute />
+        {:else}
+            <h2>
+                <input class="times" bind:value={times} type="number" min="0" />
+                {times == 1 ? "TIME" : "TIMES"}
+            </h2>
+        {/if}
+        <ArrowRightIcon />
+        <h2>PER DAY</h2>
     </div>
 </Window>
 
 <style>
+    .top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .times {
+        background-color: transparent;
+        border-bottom: 2px solid var(--main-color);
+        color: white;
+        width: 2em;
+        font-size: 1.2em;
+        outline: none;
+        text-align: center;
+    }
+    .times:focus {
+        border-bottom: 2px solid white;
+    }
+
     .option-btn h2 {
         padding: 5px 15px;
         margin: 0px 5px;
@@ -93,6 +121,7 @@
     }
 
     .option-btn {
+        width: 100%;
         position: relative;
         display: flex;
         background-color: transparent;
@@ -111,13 +140,11 @@
     .option-btn:not(.moveRight):hover:before {
         transform: translateX(4%);
     }
-    
 
     .options {
         margin: 30px 0;
         gap: 15px;
         display: flex;
-        justify-self: center;
         align-items: center;
         flex-direction: column;
     }
@@ -130,6 +157,7 @@
         flex-wrap: wrap;
         gap: 10px;
         align-items: center;
+        justify-content: center;
     }
     .action {
         padding: 15px;

@@ -5,24 +5,14 @@
         ChevronUpIcon,
     } from "svelte-feather-icons";
 
-    let { selectedHour = $bindable(0), selectedMinute=$bindable(0) } = $props();
-    
+    let { selectedHour = $bindable(0), selectedMinute = $bindable(0) } =
+        $props();
+
     const hoursArr = Array.from({ length: 25 }, (_, i) => i);
     const minutesArr = Array.from({ length: 61 }, (_, i) => i);
 
-
-
-    
-
-
-
-
     function animatedScroll(node, isHours) {
         $effect(() => {
-
-
-            
-
             let resetScrollTMID = 0;
             let startingDragY;
             let startingY;
@@ -34,12 +24,17 @@
             function setTop(target) {
                 node.scrollTop = target;
 
-                if(isHours) {
-                    selectedHour = Math.min(Math.max(Math.round(target / 30), 0), 24);
+                if (isHours) {
+                    selectedHour = Math.min(
+                        Math.max(Math.round(target / 30), 0),
+                        24,
+                    );
                 } else {
-                    selectedMinute = Math.min(Math.max(Math.round(target / 30), 0), 60);
+                    selectedMinute = Math.min(
+                        Math.max(Math.round(target / 30), 0),
+                        60,
+                    );
                 }
-
             }
 
             function scrollTo(target, dontFix) {
@@ -131,7 +126,7 @@
                 if (Math.abs(velocity) > 3) {
                     velocity *= 0.95;
                     /*node.scrollTop += velocity / 10;*/
-                    setTop(node.scrollTop + (velocity / 10));
+                    setTop(node.scrollTop + velocity / 10);
                     animateTouchId = window.requestAnimationFrame(animateTouch);
                 } else {
                     window.cancelAnimationFrame(animFrameId);
@@ -163,30 +158,62 @@
 </script>
 
 <div class="wrap">
-    <div class="scroll" use:animatedScroll={true}>
-        <p class="scroll-item"><ChevronDownIcon size="30" /></p>
-        {#each hoursArr as h}
-            <p class="scroll-item">{h}</p>
-        {/each}
-        <p class="scroll-item"><ChevronUpIcon size="30" /></p>
+    <div class="labels">
+        <p>Hours</p>
+        <p>Minutes</p>
     </div>
-    <div>:</div>
-    <div class="scroll" use:animatedScroll={false}>
-        <p class="scroll-item"><ChevronDownIcon size="30" /></p>
-        {#each minutesArr as m}
-            <p class="scroll-item">{m}</p>
-        {/each}
-        <p class="scroll-item"><ChevronUpIcon size="30" /></p>
+    <div class="time-wrap">
+        <div class="scroll" use:animatedScroll={true}>
+            <p class="scroll-item out"><ChevronDownIcon size="30" /></p>
+            {#each hoursArr as h}
+                <p
+                    class="scroll-item"
+                    class:out={selectedHour !== h || selectedHour !== h}
+                >
+                    {h}
+                </p>
+            {/each}
+            <p class="scroll-item out"><ChevronUpIcon size="30" /></p>
+        </div>
+        <div class="seperator">:</div>
+        <div class="scroll" use:animatedScroll={false}>
+            <p class="scroll-item out"><ChevronDownIcon size="30" /></p>
+            {#each minutesArr as m}
+                <p
+                    class="scroll-item out"
+                    class:out={selectedMinute !== m || selectedMinute !== m}
+                >
+                    {m}
+                </p>
+            {/each}
+            <p class="scroll-item out"><ChevronUpIcon size="30" /></p>
+        </div>
     </div>
 </div>
 
 <style>
-    .wrap {
+    .labels {
+        display: flex;
+        justify-content: space-between;
+    }
+    .labels p {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 14px;
+    }
+
+
+    .out {
+        color: rgba(255, 255, 255, 0.5);
+        scale: 0.8;
+    }
+
+    .time-wrap {
         align-items: center;
         display: flex;
-        gap: 5px;
+        gap: 30px;
         font-size: 2em;
         height: 90px;
+        justify-content: center;
     }
 
     .scroll {
