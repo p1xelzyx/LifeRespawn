@@ -42,7 +42,10 @@
             >
             <button
                 class="option-btn"
-                onclick={() => (options.isDuration = !options.isDuration)}
+                onclick={() => {
+                    options.isDuration = !options.isDuration;
+                    times = 0;
+                }}
                 class:moveRight={!options.isDuration}
                 ><h2><ClockIcon /> Duration</h2>
                 <h2><RepeatIcon /> Amount</h2></button
