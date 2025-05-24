@@ -5,14 +5,15 @@
         ChevronUpIcon,
     } from "svelte-feather-icons";
 
+    let { selectedHour = $bindable(0), selectedMinute=$bindable(0) } = $props();
+    
     const hoursArr = Array.from({ length: 25 }, (_, i) => i);
     const minutesArr = Array.from({ length: 61 }, (_, i) => i);
 
-    let selectedHour = $state();
-    let selectedMinute = $state();
 
-    $inspect(selectedHour);
-    $inspect(selectedMinute);
+
+    
+
 
 
 
@@ -34,9 +35,9 @@
                 node.scrollTop = target;
 
                 if(isHours) {
-                    selectedHour = Math.round(target / 30);
+                    selectedHour = Math.min(Math.max(Math.round(target / 30), 0), 24);
                 } else {
-                    selectedMinute = Math.round(target / 30);
+                    selectedMinute = Math.min(Math.max(Math.round(target / 30), 0), 60);
                 }
 
             }

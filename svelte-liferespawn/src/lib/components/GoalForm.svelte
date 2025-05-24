@@ -9,6 +9,13 @@
         XIcon,
     } from "svelte-feather-icons";
 
+    let selectedHour = $state(0);
+    let selectedMinute = $state(0);
+
+    $inspect(selectedHour);
+    $inspect(selectedMinute);
+
+
     let window = $state();
     let actionList = $state();
 
@@ -58,7 +65,7 @@
         {/if}
         <ArrowRightIcon />
         <h2>{options.isPositive ? "AT LEAST" : "MAX"}</h2>
-        <Time />
+        <Time bind:selectedHour={selectedHour} bind:selectedMinute={selectedMinute}/>
     </div>
 </Window>
 
