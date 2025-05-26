@@ -2,6 +2,7 @@
     import { MoodLog, ActionLog } from "$components";
 
     let { data } = $props();
+    console.log(data);
 
     let moodLog = $state();
     let actionLog = $state();
