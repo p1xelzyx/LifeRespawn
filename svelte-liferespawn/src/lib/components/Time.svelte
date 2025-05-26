@@ -130,7 +130,6 @@
             function handleTouchCancel(e) {
                 isDragging = false;
                 animateTouchId = window.requestAnimationFrame(animateTouch);
-                console.log("hi");
             }
 
             function animateTouch() {

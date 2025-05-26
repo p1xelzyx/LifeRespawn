@@ -10,7 +10,6 @@
 <section class="app-section section-1">
     <div class="log-info">
         <p>Write down how you feel right now, or what you just did.</p>
-        <p>You can always log your actions at the end of the day down below.</p>
     </div>
     <div class="log-buttons">
         <button class="main-color-3d-button" onclick={moodLog.show}
@@ -21,8 +20,8 @@
 </section>
 
 <section class="app-section section-2">
-    <button class="main-color-3d-button"> Finish your day </button>
-    <p>What did you do today?</p>
+    <button class="main-color-3d-button"> Check today </button>
+    <p>Check what you've completed and see what's still left to do today. Stay on track and finish strong!</p>
 </section>
 
 <MoodLog bind:this={moodLog}/>

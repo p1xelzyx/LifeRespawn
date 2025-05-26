@@ -227,7 +227,69 @@ def new_goal():
 
     novId = newId(goal_table.all())
 
-    goal_table.insert({"id": novId, "action_id": data["action_id"], "duration_minutes": data.get("duration_minutes", False), "amount": data.get("amount", False), "username": user["username"], "positive": data["positive"]})
+    goal_table.insert({"id": novId, "action_id": data["action_id"], "duration_minutes": data.get("duration_minutes", False), "amount": data.get("amount", False), "username": user["username"], "positive": data["positive"], "days": data["days"]})
+
+    return jsonify({"status": "success"})
+
+
+@app.route("/get_goals", methods=["POST"])
+def get_goals():
+    sessionid = request.cookies.get("sessionid")
+    
+    user = user_table.search(query.username == usm.get_user(sessionid))
+    if(not user):
+        return jsonify({"status": "fail"}), 401
+    else:
+        user = user[0]
+
+
+    vse = goal_table.search(query.username == user["username"])
+    print(vse)
+    return jsonify({"status": "success", "goals": vse})
+
+
+@app.route("/delete_goal", methods=["POST"])
+def delete_goal():
+    sessionid = request.cookies.get("sessionid")
+    
+    user = user_table.search(query.username == usm.get_user(sessionid))
+    if(not user):
+        return jsonify({"status": "fail"}), 401
+    else:
+        user = user[0]
+
+    data = request.json
+    goals = goal_table.search(query.id == data.get("goal_id"))
+
+    if not goals:
+        return jsonify({"status": "fail"})
+
+    goal_table.update({"username": ""}, query.id == goals[0]["id"])
+
+    return jsonify({"status": "success"})
+
+@app.route("/update_goal_day", methods=["POST"])
+def update_goal_day():
+    sessionid = request.cookies.get("sessionid")
+    
+    user = user_table.search(query.username == usm.get_user(sessionid))
+    if(not user):
+        return jsonify({"status": "fail"}), 401
+    else:
+        user = user[0]
+
+    data = request.json
+    goals = goal_table.search(query.id == data.get("goal_id"))
+
+    if not goals:
+        return jsonify({"status": "fail"})
+    
+    current = goals[0]["days"]
+
+    current[data["day"]] = 0 if current[data["day"]] else 1 
+
+
+    goal_table.update({"days": current}, query.id == goals[0]["id"])
 
     return jsonify({"status": "success"})
 

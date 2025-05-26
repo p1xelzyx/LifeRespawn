@@ -1,4 +1,5 @@
 <script>
+    import { invalidateAll } from "$app/navigation";
     import { Window, ActionList, Time } from "$components";
     import { impactLevels } from "$lib/data/impactLevels";
     import {
@@ -17,7 +18,6 @@
     let actionList = $state();
 
     let { actions } = $props();
-    console.log(actions);
 
     export function show() {
         window.show();
@@ -39,7 +39,8 @@
                         ? selectedHour * 60 + selectedMinute
                         : false,
                     amount: !options.isDuration ? times : false,
-                    positive: options.isPositive
+                    positive: options.isPositive,
+                    days: [1,1,1,1,1,1,1]
                 },
             }),
         });
@@ -49,7 +50,9 @@
         let data = await response.json();
         console.log(data);
         if (data.status === "success") {
+            await invalidateAll();
             window.hide();
+
         }
     }
 </script>
@@ -113,6 +116,9 @@
 <style>
     .end-buttons {
         display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
     }
     .window-end-button {
         margin: 20px;

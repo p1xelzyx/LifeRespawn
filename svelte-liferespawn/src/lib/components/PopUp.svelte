@@ -13,7 +13,6 @@
     export async function start(config) {
         if(!isHidden) {
             stop();
-            console.log("waiting")
             await new Promise((resolve) => {
                 setTimeout(resolve, 210);
             });

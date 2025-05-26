@@ -35,9 +35,6 @@
 
     async function sendActionLog() {
         // ker action, duration
-        console.log(
-            durationEnabled ? selectedHour * 60 + selectedMinute : false,
-        );
         const response = await fetch("/api/post", {
             method: "POST",
             body: JSON.stringify({

@@ -49,6 +49,7 @@ declare module '$env/static/private' {
 	export const JAVA_HOME: string;
 	export const LANG: string;
 	export const LOCALAPPDATA: string;
+	export const LOCAL_GIT_DIRECTORY: string;
 	export const LOGONSERVER: string;
 	export const NODE: string;
 	export const NODE_ENV: string;
@@ -111,7 +112,6 @@ declare module '$env/static/private' {
 	export const VSCODE_GIT_ASKPASS_NODE: string;
 	export const VSCODE_GIT_IPC_HANDLE: string;
 	export const windir: string;
-	export const __COMPAT_LAYER: string;
 }
 
 /**
@@ -166,6 +166,7 @@ declare module '$env/dynamic/private' {
 		JAVA_HOME: string;
 		LANG: string;
 		LOCALAPPDATA: string;
+		LOCAL_GIT_DIRECTORY: string;
 		LOGONSERVER: string;
 		NODE: string;
 		NODE_ENV: string;
@@ -228,7 +229,6 @@ declare module '$env/dynamic/private' {
 		VSCODE_GIT_ASKPASS_NODE: string;
 		VSCODE_GIT_IPC_HANDLE: string;
 		windir: string;
-		__COMPAT_LAYER: string;
 		[key: `PUBLIC_${string}`]: undefined;
 		[key: `${string}`]: string | undefined;
 	}

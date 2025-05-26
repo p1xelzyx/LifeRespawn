@@ -1,36 +1,39 @@
 <script>
     import { impactLevels } from "$lib/data/impactLevels";
-    import { ArrowRightIcon } from "svelte-feather-icons";
-    import { GoalForm } from "$components";
+    import { ArrowRightIcon, Trash2Icon } from "svelte-feather-icons";
+    import { GoalForm, DeleteGoal } from "$components";
+    import { logout } from "$utils/logout.js";
+    import { invalidateAll } from "$app/navigation";
 
     let { data } = $props();
+    console.log(data);
 
     let goalForm = $state();
+    let deleteGoal = $state();
 
-    let tmpGoals = [
-        {
-            type: 0,
-            action: { impact: 1, name: "gledanje tv" },
-            duration: 60,
-            amount: 0,
-            days: [1, 1, 1, 1, 1, 1, 1],
-        },
-        {
-            type: 1,
-            action: { impact: 4, name: "odnes smeti vn" },
-            duration: 0,
-            amount: 2,
-            days: [1, 1, 1, 1, 0, 0, 0],
-        },
-        {
-            type: 1,
-            action: { impact: 4, name: "učit se" },
-            duration: 0,
-            amount: 2,
-            days: [0, 0, 1, 1, 1, 1, 0],
-        },
-    ];
     const DAY_NAMES = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+
+     async function updateGoalDay(id, day) {
+        const response = await fetch("/api/post", {
+            method: "POST",
+            body: JSON.stringify({
+                endpoint: "update_goal_day",
+                data: {
+                    goal_id: id,
+                    day: day
+                },
+            }),
+        });
+        if (response.status === 401) return logout();
+        if (!response.ok) return alert("error");
+
+        let data = await response.json();
+        console.log(data);
+        if (data.status === "success") {
+            await invalidateAll();
+        }
+    }
 </script>
 
 <section class="app-section">
@@ -40,35 +43,36 @@
     </div>
 
     <div class="goal-list">
-        {#each tmpGoals as goal}
+        {#each data.goals as goal}
             <div class="goal">
+                <button class="trash-icon" onclick={() => deleteGoal.show(goal.id)}><Trash2Icon/></button>
                 <h3 class="action">
-                    {impactLevels[goal.action.impact].sign}
-                    {goal.action.name}
+                    {impactLevels[data.actions.find(e => e.id == goal.action_id).impact].sign}
+                    {data.actions.find(e => e.id == goal.action_id).name}
                 </h3>
                 <ArrowRightIcon />
-                <h3 class="goal-label" class:negative={!goal.type}>
-                    {#if goal.type == 1}
+                <h3 class="goal-label" class:negative={!goal.positive}>
+                    {#if goal.positive == 1}
                         {#if goal.amount}
                             at least {goal.amount}
                             {goal.amount === 1 ? "time" : "times"} per day
                         {:else}
-                            at least {Math.floor(goal.duration / 60)}h {goal.duration %
+                            at least {Math.floor(goal.duration_minutes / 60)}h {goal.duration_minutes %
                                 60}min per day
                         {/if}
-                    {:else if goal.amount === 0 && goal.duration === 0}
+                    {:else if goal.amount === 0 && goal.duration_minutes === 0}
                         dont do
                     {:else if goal.amount}
                         max {goal.amount}
                         {goal.amount === 1 ? "time" : "times"} per day
                     {:else}
-                        max {Math.floor(goal.duration / 60)}h {goal.duration %
+                        max {Math.floor(goal.duration_minutes / 60)}h {goal.duration_minutes %
                             60}min per day
                     {/if}
                 </h3>
                 <div class="days-list">
                     {#each DAY_NAMES as dayName, i}
-                        <button class="day" class:day-selected={goal.days[i]}>
+                        <button class="day" class:day-selected={goal.days[i]} onclick={() => updateGoalDay(goal.id, i)}>
                             {dayName}
                         </button>
                     {/each}
@@ -78,9 +82,18 @@
     </div>
 </section>
 
+<DeleteGoal bind:this={deleteGoal}/>
 <GoalForm bind:this={goalForm} actions={data.actions}/>
 
 <style>
+    .trash-icon {
+        color: red;
+        border: none;
+        background-color: transparent;
+        padding: 0;
+        margin-right: 10px;
+    }
+
     .goal-label {
         border-radius: 10px;
         padding: 10px;
@@ -106,6 +119,9 @@
     }
     .day-selected {
         background-color: var(--main-color);
+    }
+    .day:hover {
+        scale: 1.1;
     }
 
     .action {
