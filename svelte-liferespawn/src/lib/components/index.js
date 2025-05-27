@@ -9,3 +9,4 @@ export { default as ActionList } from "./ActionList.svelte";
 export { default as Time } from "./Time.svelte";
 export { default as DeleteGoal } from "./DeleteGoal.svelte";
 export { default as DailyAnalysis } from "./DailyAnalysis.svelte";
+export { default as MissionForm } from "./MissionForm.svelte";

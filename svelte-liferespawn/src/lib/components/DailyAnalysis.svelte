@@ -87,7 +87,7 @@
             <i>None</i>
         {/if}
     </div>
-    <button class="window-end-button">Close</button>
+    <button class="window-end-button" onclick={window.hide}>Close</button>
 </Window>
 
 <style>

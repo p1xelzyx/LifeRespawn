@@ -13,6 +13,7 @@ actions_table = db.table("actions")
 action_log_table = db.table("action_logs")
 mood_log_table = db.table("mood_logs")
 goal_table = db.table("goals")
+mission_table = db.table("missions")
 
 query = Query()
 
@@ -336,6 +337,75 @@ def check_goals_today():
         final.append({"name": action["name"], "current": full, "goal": goalFull, "unit": goalUnit, "positive": goal["positive"]})
 
     return jsonify({"status": "success", "analysis": final})
+
+
+
+@app.route("/save_mission", methods=["POST"])
+def save_mission():
+    sessionid = request.cookies.get("sessionid")
+
+    user = validateUser(sessionid)
+    if not user:
+        return jsonify({"status": "fail"}), 401
+    
+    data = request.json # ime, desc opt., priorty 0-2 
+
+    novId = newId(mission_table.all())
+
+    mission_table.insert({"id": novId, "name": data["name"], "description": data.get("description", ""), "priority": data["priority"], "username": user["username"], "completed": 0})
+
+
+    return jsonify({"status": "success"})
+
+@app.route("/get_missions", methods=["POST"])
+def get_missions():
+    sessionid = request.cookies.get("sessionid")
+
+    user = validateUser(sessionid)
+    if not user:
+        return jsonify({"status": "fail"}), 401
+    
+    allFresh = mission_table.search((query.username == user["username"]) & (query.completed == 0))
+    
+    print(allFresh)
+
+    return jsonify({"status": "success", "missions": allFresh})
+    
+@app.route("/delete_mission", methods=["POST"])
+def delete_mission():
+    sessionid = request.cookies.get("sessionid")
+
+    user = validateUser(sessionid)
+    if not user:
+        return jsonify({"status": "fail"}), 401
+    
+    data = request.json
+    missions = actions_table.search(query.id == data.get("id"))
+
+    if not missions:
+        return jsonify({"status": "fail"})
+
+    mission_table.update({"completed": -1}, query.id == data["id"])
+
+    return jsonify({"status": "success"})
+
+@app.route("/complete_mission", methods=["POST"])
+def complete_mission():
+    sessionid = request.cookies.get("sessionid")
+
+    user = validateUser(sessionid)
+    if not user:
+        return jsonify({"status": "fail"}), 401
+    
+    data = request.json
+    missions = actions_table.search(query.id == data.get("id"))
+
+    if not missions:
+        return jsonify({"status": "fail"})
+
+    mission_table.update({"completed": 1}, query.id == data["id"])
+
+    return jsonify({"status": "success"})
 
 
 
