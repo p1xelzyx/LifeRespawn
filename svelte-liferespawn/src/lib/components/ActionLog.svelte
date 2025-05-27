@@ -1,4 +1,5 @@
 <script>
+    import { invalidateAll } from "$app/navigation";
     import { Window, ActionList, Time, PopUp } from "$components";
     import { impactLevels } from "$lib/data/impactLevels";
     import { logout } from "$utils/logout";
@@ -53,6 +54,7 @@
         let data = await response.json();
         console.log(data);
         if (data.status === "success") {
+            await invalidateAll();
             window.hide();
         }
     }
