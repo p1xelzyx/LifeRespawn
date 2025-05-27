@@ -30,9 +30,11 @@
     export function show() {
         window.show();
         selectedAction = -1;
+        actionList.clear();
     }
 
     let selectedAction = $derived(actionList?.getSelectedAction());
+    
 
     async function sendActionLog() {
         // ker action, duration

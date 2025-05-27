@@ -1,9 +1,12 @@
 <script>
-    import { MoodLog, ActionLog } from "$components";
+    import { MoodLog, ActionLog, DailyAnalysis } from "$components";
+    
 
     let { data } = $props();
     console.log(data);
 
+    let dailyAnalysis = $state();
+    $inspect(dailyAnalysis);
     let moodLog = $state();
     let actionLog = $state();
 </script>
@@ -21,13 +24,13 @@
 </section>
 
 <section class="app-section section-2">
-    <button class="main-color-3d-button"> Check today </button>
+    <button class="main-color-3d-button" onclick={dailyAnalysis.show}> Check today </button>
     <p>Check what you've completed and see what's still left to do today. Stay on track and finish strong!</p>
 </section>
 
 <MoodLog bind:this={moodLog}/>
 <ActionLog bind:this={actionLog} actions={data.actions}/>
-
+<DailyAnalysis bind:this={dailyAnalysis} analysis={data.analysis}/>
 <style>
     .log-info p {
         font-size: 1.1em;

@@ -70,6 +70,9 @@
     export function getSelectedAction() {
         return actions[selectedAction];
     }
+    export function clear() {
+        selectedAction = -1;
+    }
 </script>
 
 <div style="display: flex; gap: 5px;">

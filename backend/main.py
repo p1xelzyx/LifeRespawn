@@ -312,15 +312,12 @@ def check_goals_today():
 
     goals = goal_table.search(query.username == user["username"])
     weekDay = datetime.today().weekday()
+    dateToday = datetime.today().date()
     actions = actions_table.search(query.username == user["username"])
     
     
-    logs = action_log_table.search(query.username == user["username"])
-    for log in logs:
-        date = datetime.strptime(log["time"], "%Y-%m-%d %H:%M:%S").date()
-        if not (date == datetime.today().date()):
-            logs.remove(log)
-    print(logs)
+    logs = [l for l in action_log_table.search(query.username == user["username"]) if datetime.strptime(l["time"], "%Y-%m-%d %H:%M:%S").date() == dateToday]
+    
     final = []
     for goal in goals: 
         if not goal["days"][weekDay]: continue
@@ -331,10 +328,6 @@ def check_goals_today():
 
         full = 0
         for log in logs:
-            print(log["username"], action["name"])
-            print(log["action_id"] == action["id"])
-            print(log[goalUnit])
-
             if log["action_id"] != action["id"]: continue
             full += log[goalUnit] # VELIK PROBLEM: dela za enkrat ampak treba popravt frontend in sistem actionov. verjetna rešitev: treba bo spremenit action v frontend ko nardiš da je amount alpa duration, tkoda se pol to nebo mešal. ker zdej lahko action log nardiš kot čs alpa amount in to nima smila ker je goal lahko samo eno ali drugo. npr user lahko ponesreči beleži action kor amount ampak ma goal nastavljen na duration in pol se bo štelo +1 minuta kokr je user mislu +1 amount ko je beležil to mu mormo dat stran opcijo da to nardi
         

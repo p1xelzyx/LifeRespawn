@@ -7,4 +7,5 @@ export { default as ActionLog } from "./ActionLog.svelte";
 export { default as GoalForm } from "./GoalForm.svelte";
 export { default as ActionList } from "./ActionList.svelte";
 export { default as Time } from "./Time.svelte";
-export { default as DeleteGoal } from "./DeleteGoal.svelte"
+export { default as DeleteGoal } from "./DeleteGoal.svelte";
+export { default as DailyAnalysis } from "./DailyAnalysis.svelte";
