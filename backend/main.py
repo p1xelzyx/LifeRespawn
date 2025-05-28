@@ -4,6 +4,7 @@ import bcrypt
 import base64
 from datetime import datetime
 from userStateManager import UserStateManager
+import calendar
 
 
 db = TinyDB('../db.json')
@@ -232,7 +233,7 @@ def new_goal():
 
     zdajStr = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    goal_table.insert({"id": novId, "action_id": data["action_id"], "duration_minutes": data.get("duration_minutes", False), "amount": data.get("amount", False), "username": user["username"], "positive": data["positive"], "days": data["days"], "date_created": zdajStr})
+    goal_table.insert({"id": novId, "action_id": data["action_id"], "duration_minutes": data.get("duration_minutes", False), "amount": data.get("amount", False), "username": user["username"], "positive": data["positive"], "days": data["days"], "date_created": zdajStr, "date_deleted": False})
 
     return jsonify({"status": "success"})
 
@@ -269,7 +270,8 @@ def delete_goal():
     if not goals:
         return jsonify({"status": "fail"})
 
-    goal_table.update({"username": ""}, query.id == goals[0]["id"])
+    zdajStr = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    goal_table.update({"username": "", "date_deleted": zdajStr}, query.id == goals[0]["id"])
 
     return jsonify({"status": "success"})
 
@@ -411,6 +413,58 @@ def complete_mission():
     mission_table.update({"completed": 1}, query.id == data["id"])
 
     return jsonify({"status": "success"})
+
+@app.route("/goal_history", methods=["POST"])
+def goal_history():
+    sessionid = request.cookies.get("sessionid")
+
+    user = validateUser(sessionid)
+    if not user:
+        return jsonify({"status": "fail"}), 401
+    
+    data = request.json
+    # gremo skos vse dneve. za vsak dan pogledamo keri goli so bli tm (if date created >= dan, dan weekday je v goalovih weekdayih )
+    # mamo dan z goli, za vsak gol je treba prevert actione za točn tist dan in nardit za vsak gol za vrnt: ime, kok, goal kok, positive, unit
+    # npr: {"1": [{"name": "gledanje tv", "total": 120, "positive": False, "unit": "minutes"}, {...}], "2": {...} itd...}
+
+    year = data["year"]
+    month = data["month"] + 1
+
+    def checkDateMonth(date):
+        return date.year == year and date.month == month
+    
+    def checkGoal(date, date_created, date_deleted, days):
+        return days[date.weekday()] and date >= date_created and date < date_deleted
+
+    logs = [l for l in action_log_table.search(query.username == user["username"]) if checkDateMonth(datetime.strptime(l["time"], "%Y-%m-%d %H:%M:%S").date())]
+
+    history = {}
+
+    monthLength = calendar.monthrange(data["year"], data["month"])
+    for day in range(1, monthLength + 1):
+        # mamo year, month, day
+        thisDate = datetime.date(year, month, day)
+
+        logsThisDay = [l for l in logs if datetime.strptime(l["time"], "%Y-%m-%d %H:%M:%S").date() == thisDate]
+
+        allValid = []
+
+        for g in goal_table.search(query.username == user["username"]):
+            if not checkGoal(thisDate, datetime.strptime(g["date_created"], "%Y-%m-%d %H:%M:%S").date(), datetime.strptime(g["date_deleted"], "%Y-%m-%d %H:%M:%S").date(), g["days"]): continue
+            
+            goal_unit = "amount" if g["amount"] else "duration_minutes"
+            goal_action = actions_table.search((query.id == g.action_id) & (query.username == user["username"]))[0]
+
+            full = 0
+            for l in logsThisDay:
+                if l["action_id"] == goal_action["id"]:
+                    full += l["goal_unit"] # problem: glej route check_goals_today; opisano tm
+            
+            allValid.append({"name": goal_action["name"], "total": full, "goal": g[goal_unit], "unit": goal_unit, "positive": g["positive"]})
+
+        history[day] = allValid
+
+    return jsonify({"status": "success", "history": history})
 
 
 
