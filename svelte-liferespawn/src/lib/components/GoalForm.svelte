@@ -1,6 +1,6 @@
 <script>
     import { invalidateAll } from "$app/navigation";
-    import { Window, ActionList, Time } from "$components";
+    import { Window, ActionList, TimePicker } from "$components";
     import { impactLevels } from "$lib/data/impactLevels";
     import {
         ArrowRightIcon,
@@ -96,7 +96,7 @@
         <h2>{options.isPositive ? "AT LEAST" : "MAX"}</h2>
         <ArrowRightIcon />
         {#if options.isDuration}
-            <Time bind:selectedHour bind:selectedMinute />
+            <TimePicker bind:selectedHour bind:selectedMinute />
         {:else}
             <h2>
                 <input class="times" bind:value={times} type="number" min="0" />

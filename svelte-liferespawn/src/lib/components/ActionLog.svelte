@@ -1,6 +1,6 @@
 <script>
     import { invalidateAll } from "$app/navigation";
-    import { Window, ActionList, Time, PopUp } from "$components";
+    import { Window, ActionList, TimePicker, PopUp } from "$components";
     import { impactLevels } from "$lib/data/impactLevels";
     import { logout } from "$utils/logout";
     import { PlusIcon, SearchIcon } from "svelte-feather-icons";
@@ -90,7 +90,7 @@
                     />
                 </div>
                 <div class:disabled={!durationEnabled}>
-                    <Time
+                    <TimePicker
                         bind:this={timeNode}
                         bind:selectedHour
                         bind:selectedMinute

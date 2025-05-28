@@ -1,5 +1,6 @@
 <script>
     let selectedId = $state(0);
+    import { GoalHistory } from "$components";
 
     let options = $state([
         "Goal History",
@@ -29,9 +30,15 @@
                 >
             {/each}
         </div>
-        <div class="content">
-            asd
-        </div>
+        {#if selectedId == 0}
+            <GoalHistory />
+        {:else if selectedId == 1}
+            <div>mood graph</div>
+        {:else if selectedId == 2}
+            <div>missions</div>
+        {:else}
+            <div>action graph</div>
+        {/if}
     </div>
 </section>
 
@@ -45,14 +52,12 @@
         justify-content: space-between;
         gap: 20px;
     }
-    .content {
-        flex-grow: 1;
-    }
     .selection {
         display: flex;
         gap: 5px;
         flex-direction: column;
         max-width: fit-content;
+        flex-wrap: wrap;
     }
     @media only screen and (max-width: 600px) {
         .selection {
