@@ -1,0 +1,78 @@
+<script>
+    let selectedId = $state(0);
+
+    let options = $state([
+        "Goal History",
+        "Mood Graph",
+        "Missions",
+        "Action Impact",
+    ]);
+</script>
+
+<!-- todo 
+
+- koledar z dnevi kdaj vsak dan pokaze rdeca ali zelene, hover pokaze kok golov je blo narjenih, ali prazno ce ni blo golov tist dan
+- graf mood
+- completed missions
+- korelacija med actioni in kako vpliva na mood
+-->
+
+<section class="app-section">
+    <h1 class="title">Analysis</h1>
+    <div class="wrap">
+        <div class="selection">
+            {#each options as opt, i}
+                <button
+                    class="select-option"
+                    class:selected={selectedId == i}
+                    onclick={() => (selectedId = i)}>{opt}</button
+                >
+            {/each}
+        </div>
+        <div class="content">
+            asd
+        </div>
+    </div>
+</section>
+
+<style>
+    .title {
+        margin-bottom: 20px;
+    }
+
+    .wrap {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+    }
+    .content {
+        flex-grow: 1;
+    }
+    .selection {
+        display: flex;
+        gap: 5px;
+        flex-direction: column;
+        max-width: fit-content;
+    }
+    @media only screen and (max-width: 600px) {
+        .selection {
+            flex-direction: row;
+        }
+        .wrap {
+            flex-direction: column;
+        }
+    }
+    .select-option {
+        padding: 10px;
+        background-color: rgb(36, 36, 36);
+        color: white;
+        font-size: 1em;
+        transition: 0.1s all;
+    }
+    .select-option:not(.selected):hover {
+        background-color: rgb(24, 24, 24);
+    }
+    .selected {
+        background-color: var(--main-color);
+    }
+</style>

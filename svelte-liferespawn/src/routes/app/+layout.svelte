@@ -4,7 +4,7 @@
     import { logout } from "$utils/logout";
     import { onMount } from "svelte";
 
-    let subPages = ["dashboard", "actions", "goals", "missions"];
+    let subPages = ["dashboard", "actions", "goals", "missions", "analysis"];
 
     let { children } = $props();
 

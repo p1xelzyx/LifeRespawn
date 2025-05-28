@@ -79,6 +79,9 @@
                 </div>
             </div>
         {/each}
+        {#if data?.goals?.length == 0}
+            <i>You have no goals yet.</i>
+        {/if}
     </div>
 </section>
 
@@ -86,6 +89,12 @@
 <GoalForm bind:this={goalForm} actions={data.actions}/>
 
 <style>
+    i {
+        color: rgb(180, 180, 180);
+        display: block;
+        margin-top: 20px;
+    }
+
     .trash-icon {
         color: red;
         border: none;

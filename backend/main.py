@@ -211,7 +211,9 @@ def save_action():
 
     zdajStr = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    action_log_table.insert({"id": novId, "action_id": data["action_id"], "duration_minutes": data.get("duration_minutes", False), "time": zdajStr, "username": user["username"]})
+    dur = data.get("duration_minutes", False)
+
+    action_log_table.insert({"id": novId, "action_id": data["action_id"], "duration_minutes": dur, "amount": 1 if dur is False else 0 ,"time": zdajStr, "username": user["username"]})
 
 
     return jsonify({"status": "success"})
@@ -228,7 +230,9 @@ def new_goal():
 
     novId = newId(goal_table.all())
 
-    goal_table.insert({"id": novId, "action_id": data["action_id"], "duration_minutes": data.get("duration_minutes", False), "amount": data.get("amount", False), "username": user["username"], "positive": data["positive"], "days": data["days"]})
+    zdajStr = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    goal_table.insert({"id": novId, "action_id": data["action_id"], "duration_minutes": data.get("duration_minutes", False), "amount": data.get("amount", False), "username": user["username"], "positive": data["positive"], "days": data["days"], "date_created": zdajStr})
 
     return jsonify({"status": "success"})
 
@@ -330,6 +334,7 @@ def check_goals_today():
         full = 0
         for log in logs:
             if log["action_id"] != action["id"]: continue
+            print(log)
             full += log[goalUnit] # VELIK PROBLEM: dela za enkrat ampak treba popravt frontend in sistem actionov. verjetna rešitev: treba bo spremenit action v frontend ko nardiš da je amount alpa duration, tkoda se pol to nebo mešal. ker zdej lahko action log nardiš kot čs alpa amount in to nima smila ker je goal lahko samo eno ali drugo. npr user lahko ponesreči beleži action kor amount ampak ma goal nastavljen na duration in pol se bo štelo +1 minuta kokr je user mislu +1 amount ko je beležil to mu mormo dat stran opcijo da to nardi
         
         goalFull = goal[goalUnit]
