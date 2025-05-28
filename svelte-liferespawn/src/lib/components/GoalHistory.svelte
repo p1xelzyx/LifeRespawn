@@ -71,7 +71,11 @@
             }
             i++;
         }
-        if(JSON.stringify(cal[cal.length - 1]) === JSON.stringify([null,null,null,null,null,null,null])) cal.pop();
+        if (
+            JSON.stringify(cal[cal.length - 1]) ===
+            JSON.stringify([null, null, null, null, null, null, null])
+        )
+            cal.pop();
         return cal;
     }
 
@@ -102,6 +106,74 @@
         formActive = !formActive;
     }
     let todayDate = new Date().getDate();
+
+    async function getGoalHistory(year, month) {
+        const response = await fetch("/api/post", {
+            method: "POST",
+            body: JSON.stringify({
+                endpoint: "goal_history",
+                data: {
+                    year,
+                    month,
+                },
+            }),
+        });
+        if (response.status === 401) return logout();
+        if (!response.ok) return alert("error");
+
+        let data = await response.json();
+        if (data.status === "success") {
+            return data.history;
+        } else {
+            alert("problem");
+            return {};
+        }
+    }
+
+    let history = $state({});
+    
+    let latestCallId = 0; // tak sistem je potreben ker če spamas te fetche na slabmu internetu se parkrat hitr zloada pa flasha na koledarju tko pa lepo počakas da se sam tazadn shran in pokaže
+    $effect(async () => {
+        const callId = ++latestCallId;
+        history = {}
+
+        const result = await getGoalHistory(selectedYear, selectedMonth);
+        if (callId !== latestCallId) {
+            return;
+        }
+        latestCallId = 0;
+        history = result;
+    });
+
+    function checkGoals(day) {
+        if (!history[day]) return [null];
+
+        let arr = [];
+        let isGood = null;
+        for (let g of history[day]) {
+            let correct = g.positive ? g.total >= g.goal : g.total <= g.goal;
+            if (correct && isGood === null) {
+                isGood = true;
+            } else if (!correct) {
+                isGood = false;
+            }
+
+            let total =
+                g.unit == "amount"
+                    ? g.total
+                    : `${Math.floor(g.total / 60)}h ${g.total % 60}m`;
+            let goal =
+                g.unit == "amount"
+                    ? g.goal
+                    : `${Math.floor(g.goal / 60)}h ${g.goal % 60}m`;
+            arr.push([
+                correct,
+                `${g.name} - ${total}/ ${g.positive ? "at least" : "max"} ${goal}`,
+            ]);
+        }
+
+        return [isGood, arr];
+    }
 </script>
 
 <!--
@@ -153,16 +225,27 @@
     <div class="content">
         {#each calendar as week, i}
             {#each week as day}
+                {@const info = checkGoals(day)}
                 <div
+                    class:marked-red={info[0] === false}
+                    class:marked-green={info[0] === true}
+                    class="calendar-day"
                     class:hidden={typeof day != "number"}
                     class:today={selectedMonth === originalMonth &&
                         selectedYear === originalYear &&
                         day === todayDate}
                 >
-                    {(() => {
-                        console.log(day === null);
-                        return day;
-                    })()}
+                    {day}
+                    <div class="day-info">
+                        {#each info[1] as goal}
+                            <p
+                                class:bad-goal={!goal[0]}
+                                class:good-goal={goal[0]}
+                            >
+                                {goal[1]}
+                            </p>
+                        {/each}
+                    </div>
                 </div>
             {/each}
         {/each}
@@ -170,6 +253,45 @@
 </div>
 
 <style>
+    .day-info {
+        background-color: black;
+        padding: 10px;
+        display: none;
+        position: absolute;
+        border-radius: 10px;
+        z-index: 20;
+    }
+    .calendar-day:hover .day-info {
+        display: block;
+    }
+
+    .marked-red {
+        background-image: linear-gradient(
+            to bottom,
+            transparent 70%,
+            crimson 70%
+        );
+    }
+    .marked-green {
+        background-image: linear-gradient(
+            to bottom,
+            transparent 70%,
+            lightgreen 70%
+        );
+    }
+
+    .bad-goal {
+        color: crimson;
+    }
+    .good-goal {
+        color: lightgreen;
+    }
+    .day-info p:not(:last-child) {
+        padding-bottom: 10px;
+        border-bottom: 2px solid rgb(100, 100, 100);
+        margin-bottom: 10px;
+    }
+
     .edit-form {
         font-size: 1.2em;
         width: 100%;
@@ -250,7 +372,7 @@
         grid-template-columns: repeat(7, 1fr); /* 7 equal-width columns */
         gap: 5px;
     }
-    .content div {
+    .content > div {
         padding: 5px;
         width: 100%;
         border: 1px solid rgb(70, 70, 70);

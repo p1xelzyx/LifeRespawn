@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, make_response, render_template
 from tinydb import TinyDB, Query
 import bcrypt
 import base64
-from datetime import datetime
+from datetime import datetime, date as dateObj
 from userStateManager import UserStateManager
 import calendar
 
@@ -434,31 +434,33 @@ def goal_history():
         return date.year == year and date.month == month
     
     def checkGoal(date, date_created, date_deleted, days):
-        return days[date.weekday()] and date >= date_created and date < date_deleted
+        return days[date.weekday()] and date >= date_created and (date_deleted is True or date < date_deleted)
 
     logs = [l for l in action_log_table.search(query.username == user["username"]) if checkDateMonth(datetime.strptime(l["time"], "%Y-%m-%d %H:%M:%S").date())]
 
     history = {}
 
-    monthLength = calendar.monthrange(data["year"], data["month"])
+    realToday = datetime.now().date()
+    monthLength = calendar.monthrange(year, month)[1]
     for day in range(1, monthLength + 1):
         # mamo year, month, day
-        thisDate = datetime.date(year, month, day)
+        thisDate = dateObj(year, month, day)
+        if(thisDate > realToday): break
 
         logsThisDay = [l for l in logs if datetime.strptime(l["time"], "%Y-%m-%d %H:%M:%S").date() == thisDate]
 
         allValid = []
 
         for g in goal_table.search(query.username == user["username"]):
-            if not checkGoal(thisDate, datetime.strptime(g["date_created"], "%Y-%m-%d %H:%M:%S").date(), datetime.strptime(g["date_deleted"], "%Y-%m-%d %H:%M:%S").date(), g["days"]): continue
+            if not checkGoal(thisDate, datetime.strptime(g["date_created"], "%Y-%m-%d %H:%M:%S").date(), not g["date_deleted"] or datetime.strptime(g["date_deleted"], "%Y-%m-%d %H:%M:%S").date(), g["days"]): continue
             
             goal_unit = "amount" if g["amount"] else "duration_minutes"
-            goal_action = actions_table.search((query.id == g.action_id) & (query.username == user["username"]))[0]
+            goal_action = actions_table.search((query.id == g["action_id"]) & (query.username == user["username"]))[0]
 
             full = 0
             for l in logsThisDay:
                 if l["action_id"] == goal_action["id"]:
-                    full += l["goal_unit"] # problem: glej route check_goals_today; opisano tm
+                    full += l[goal_unit] # problem: glej route check_goals_today; opisano tm
             
             allValid.append({"name": goal_action["name"], "total": full, "goal": g[goal_unit], "unit": goal_unit, "positive": g["positive"]})
 
