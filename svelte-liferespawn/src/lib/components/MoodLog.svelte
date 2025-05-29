@@ -1,5 +1,7 @@
 <script>
+    import { invalidateAll } from "$app/navigation";
     import { Window } from "$components";
+    import { logout } from "$utils/logout";
 
 
     let moodValue = $state(5);
@@ -12,7 +14,26 @@
     }
 
 
-    
+    async function saveMood() {
+        const response = await fetch("/api/post", {
+            method: "POST",
+            body: JSON.stringify({
+                endpoint: "save_mood",
+                data: {
+                    level: moodValue
+                }
+            })
+        })
+        if(response.status === 401) logout();
+        if(!response.ok) alert("error");
+        
+        let data = await response.json();
+        console.log(data);
+        if (data.status === "success") {
+            await invalidateAll();
+            moodWindow.hide();
+        }
+    }
 </script>
 
 <Window bind:this={moodWindow}>
@@ -28,7 +49,7 @@
         <h1 style="color: {valueDisplayColor}">{moodValue}/10</h1>
         <div class="form-buttons">
             <button class="window-end-button" onclick={moodWindow.hide}>Cancel</button>
-            <button class="window-end-button">Ok</button>
+            <button class="window-end-button" onclick={saveMood}>Save</button>
         </div>
     </div>
 </Window>

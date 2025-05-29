@@ -131,11 +131,11 @@
     }
 
     let history = $state({});
-    
+    $inspect(history);
     let latestCallId = 0; // tak sistem je potreben ker če spamas te fetche na slabmu internetu se parkrat hitr zloada pa flasha na koledarju tko pa lepo počakas da se sam tazadn shran in pokaže
     $effect(async () => {
         const callId = ++latestCallId;
-        history = {}
+        history = {};
 
         const result = await getGoalHistory(selectedYear, selectedMonth);
         if (callId !== latestCallId) {
@@ -261,8 +261,12 @@
         border-radius: 10px;
         z-index: 20;
     }
+
     .calendar-day:hover .day-info {
         display: block;
+    }
+    .day-info:not(:has(*)) {
+        opacity: 0;
     }
 
     .marked-red {
@@ -278,6 +282,12 @@
             transparent 70%,
             lightgreen 70%
         );
+    }
+    .marked-red:hover {
+        outline: 2px solid crimson;
+    }
+    .marked-green:hover {
+        outline: 2px solid lightgreen;
     }
 
     .bad-goal {

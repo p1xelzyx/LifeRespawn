@@ -249,7 +249,8 @@ def get_goals():
         user = user[0]
 
 
-    vse = goal_table.search(query.username == user["username"])
+    vse = [g for g in goal_table.search(query.username == user["username"]) if g["date_deleted"] is False]
+    
     print(vse)
     return jsonify({"status": "success", "goals": vse})
 
@@ -271,7 +272,7 @@ def delete_goal():
         return jsonify({"status": "fail"})
 
     zdajStr = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    goal_table.update({"username": "", "date_deleted": zdajStr}, query.id == goals[0]["id"])
+    goal_table.update({"date_deleted": zdajStr}, query.id == goals[0]["id"])
 
     return jsonify({"status": "success"})
 
@@ -434,7 +435,7 @@ def goal_history():
         return date.year == year and date.month == month
     
     def checkGoal(date, date_created, date_deleted, days):
-        return days[date.weekday()] and date >= date_created and (date_deleted is True or date < date_deleted)
+        return days[date.weekday()] and date >= date_created and (date_deleted is True or date < date_deleted) and realToday != date
 
     logs = [l for l in action_log_table.search(query.username == user["username"]) if checkDateMonth(datetime.strptime(l["time"], "%Y-%m-%d %H:%M:%S").date())]
 
