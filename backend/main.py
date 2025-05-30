@@ -469,6 +469,33 @@ def goal_history():
 
     return jsonify({"status": "success", "history": history})
 
+@app.route("/mood_graph", methods=["POST"])
+def mood_graph():
+    sessionid = request.cookies.get("sessionid")
+
+    user = validateUser(sessionid)
+    if not user:
+        return jsonify({"status": "fail"}), 401
+    
+    data = request.json
+    
+    byDay = {}
+
+    vse = mood_log_table.search(query.username == user["username"])
+    
+    for l in vse:
+        d = datetime.strptime(l["time"], "%Y-%m-%d %H:%M:%S").date()
+        if byDay.get(d, None):
+            byDay[d] = [l["mood"]]
+        else:
+            byDay[d].append(l["mood"])
+    
+    for d in byDay:
+        byDay[d] = sum(byDay[d]) / len(byDay[d])
+    
+
+
+    return jsonify({"status": "success", "history": []})
 
 
 def newId(sez: list[object]):
