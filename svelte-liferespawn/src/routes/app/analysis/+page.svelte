@@ -1,6 +1,6 @@
 <script>
     let selectedId = $state(0);
-    import { GoalHistory } from "$components";
+    import { GoalHistory, MoodGraph } from "$components";
 
     let options = $state([
         "Goal History",
@@ -33,7 +33,7 @@
         {#if selectedId == 0}
             <GoalHistory />
         {:else if selectedId == 1}
-            <div>mood graph</div>
+            <MoodGraph />
         {:else if selectedId == 2}
             <div>missions</div>
         {:else}
