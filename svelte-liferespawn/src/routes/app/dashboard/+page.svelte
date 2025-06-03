@@ -1,6 +1,5 @@
 <script>
     import { MoodLog, ActionLog, DailyAnalysis } from "$components";
-    
 
     let { data } = $props();
     console.log(data);
@@ -11,26 +10,36 @@
     let actionLog = $state();
 </script>
 
-<section class="app-section section-1">
-    <div class="log-info">
-        <p>Write down how you feel right now, or what you just did.</p>
+<section class="app-section">
+    <div class="section-1">
+        <div class="log-info">
+            <p>Write down how you feel right now, or what you just did.</p>
+        </div>
+        <div class="log-buttons">
+            <button class="window-end-button" onclick={moodLog.show}
+                >Log mood</button
+            >
+            <button class="window-end-button" onclick={actionLog.show}
+                >Log action</button
+            >
+        </div>
     </div>
-    <div class="log-buttons">
-        <button class="main-color-3d-button" onclick={moodLog.show}
-            >Log mood</button
-        >
-        <button class="main-color-3d-button" onclick={actionLog.show}>Log action</button>
+
+    <div class="section-2">
+        <button class="window-end-button" onclick={dailyAnalysis.show}>
+            Check today
+        </button>
+        <p>
+            Check what you've completed and see what's still left to do today.
+            Stay on track and finish strong!
+        </p>
     </div>
 </section>
 
-<section class="app-section section-2">
-    <button class="main-color-3d-button" onclick={dailyAnalysis.show}> Check today </button>
-    <p>Check what you've completed and see what's still left to do today. Stay on track and finish strong!</p>
-</section>
+<MoodLog bind:this={moodLog} />
+<ActionLog bind:this={actionLog} actions={data.actions} />
+<DailyAnalysis bind:this={dailyAnalysis} analysis={data.analysis} />
 
-<MoodLog bind:this={moodLog}/>
-<ActionLog bind:this={actionLog} actions={data.actions}/>
-<DailyAnalysis bind:this={dailyAnalysis} analysis={data.analysis}/>
 <style>
     .log-info p {
         font-size: 1.1em;
@@ -41,6 +50,7 @@
         flex-direction: row;
         justify-content: space-between;
         flex-wrap: wrap;
+        border-bottom: 1px solid rgb(175, 175, 175);
     }
 
     .log-buttons {
@@ -49,14 +59,6 @@
         align-items: center;
         flex-wrap: wrap;
         margin-left: auto;
-    }
-    .log-buttons button {
-        margin: 40px;
-        font-size: 1.3em;
-        width: 150px;
-        height: 150px;
-        padding: 30px;
-        border-radius: 50%;
     }
 
     .section-2 {
@@ -71,10 +73,8 @@
     .section-2 p {
         font-size: 1.3em;
     }
-    .section-2 button {
-        padding: 30px;
-        font-size: 1.5em;
-        border-radius: 20px;
-    }
 
+    button {
+        margin: 30px;
+    }
 </style>
