@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, make_response, render_template
 from tinydb import TinyDB, Query
 import bcrypt
 import base64
-from datetime import datetime, date as dateObj
+from datetime import datetime, date as dateObj, timedelta
 from userStateManager import UserStateManager
 import calendar
 
@@ -478,24 +478,55 @@ def mood_graph():
         return jsonify({"status": "fail"}), 401
     
     data = request.json
+
+    toAvg = data.get("avg", 1)
     
-    byDay = {}
 
     vse = mood_log_table.search(query.username == user["username"])
+    if(len(vse) < 1):
+        return jsonify({"status": "success", "history": []})
     
+    history = []
     for l in vse:
-        d = datetime.strptime(l["time"], "%Y-%m-%d %H:%M:%S").date()
-        if byDay.get(d, None):
-            byDay[d] = [l["mood"]]
+        currentDate = datetime.strptime(l["time"], "%Y-%m-%d %H:%M:%S").date()
+        
+        if(len(history) > 0):
+            last = history[len(history) - 1]
+
+            loopDate = last["date"] + timedelta(days=1)
+            while loopDate < currentDate:
+                history.append({"date": loopDate, "values": []})
+                loopDate = loopDate + timedelta(days=1)
+
+            if currentDate == last["date"]:
+                last["values"].append(l["mood"])
+            else:
+                history.append({"date": currentDate, "values": [l["mood"]]})
         else:
-            byDay[d].append(l["mood"])
-    
-    for d in byDay:
-        byDay[d] = sum(byDay[d]) / len(byDay[d])
-    
+            history.append({"date": currentDate, "values": [l["mood"]]})
+
+    final = []
+
+    last = {"date": history[0]["date"], "values": []}
+    delta = 0
+    for i, e in enumerate(history):
+        if delta >= toAvg:
+            delta = 0
+            final.append(last)
+            last = {"date": e["date"], "values": []}
+        last["values"] = last["values"] + e["values"]
+        delta += 1
+
+    if last["values"]:
+        final.append(last)
 
 
-    return jsonify({"status": "success", "history": []})
+    for i, e in enumerate(final):
+        date = e["date"]
+        mood = False if len(e["values"]) == 0 else round(sum(e["values"]) / len(e["values"]), 1)
+        final[i] = {"date": {"year": date.year, "month": date.month, "day": date.day}, "value": mood}
+
+    return jsonify({"status": "success", "history": final})
 
 
 def newId(sez: list[object]):

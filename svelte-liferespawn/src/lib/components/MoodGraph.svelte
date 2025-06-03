@@ -1,37 +1,40 @@
 <script>
-    let tmpData = $state([
-        { date: { month: 4, year: 2025, day: 28 }, value: 8.8 },
-        { date: { month: 4, year: 2025, day: 27 }, value: 2 },
-        { date: { month: 4, year: 2025, day: 26 }, value: 7 },
-        { date: { month: 4, year: 2025, day: 25 }, value: 4 },
-        { date: { month: 4, year: 2025, day: 24 }, value: 5 },
-        { date: { month: 4, year: 2025, day: 23 }, value: 6 },
-        { date: { month: 4, year: 2025, day: 22 }, value: 6 },
-        { date: { month: 4, year: 2025, day: 21 }, value: 1 },
-        { date: { month: 4, year: 2025, day: 20 }, value: 1 },
-        { date: { month: 4, year: 2025, day: 19 }, value: 5 },
-        { date: { month: 4, year: 2025, day: 18 }, value: 10 },
-        { date: { month: 4, year: 2025, day: 17 }, value: 2.2 },
-        { date: { month: 4, year: 2025, day: 16 }, value: 9 },
-        { date: { month: 4, year: 2025, day: 15 }, value: 7 },
-        { date: { month: 4, year: 2025, day: 14 }, value: 5 },
-        { date: { month: 4, year: 2025, day: 13 }, value: 7 },
-        { date: { month: 4, year: 2025, day: 12 }, value: 4 },
-        { date: { month: 4, year: 2025, day: 11 }, value: 5 },
-        { date: { month: 4, year: 2025, day: 10 }, value: 9 },
-        { date: { month: 4, year: 2025, day: 9 }, value: 9.7 },
-        { date: { month: 4, year: 2025, day: 8 }, value: 4.2 },
-        { date: { month: 4, year: 2025, day: 7 }, value: 2 },
-        { date: { month: 4, year: 2025, day: 6 }, value: 6.7 },
-        { date: { month: 4, year: 2025, day: 5 }, value: 6.2 },
-        { date: { month: 4, year: 2025, day: 4 }, value: 4.4 },
-        { date: { month: 4, year: 2025, day: 3 }, value: 6 },
-    ]);
+    import { logout } from "$utils/logout";
+
+    let selectedAvg = $state("1");
+    $inspect(selectedAvg);
+
+    let tmpData = $state([]);
+    let offset = $state(0);
+    let zoom = $state(0.1);
+
+    $effect(async () => {
+        tmpData = (await getData(Number(selectedAvg)))?.reverse();
+    });
+
+    $inspect(tmpData);
+
+    async function getData(avg) {
+        const response = await fetch("/api/post", {
+            method: "post",
+            body: JSON.stringify({
+                endpoint: "mood_graph",
+                data: { avg: avg },
+            }),
+        });
+        if (response.status === 401) logout();
+        if (!response.ok) alert("error");
+
+        let data = await response.json();
+
+        if (data.status === "success") {
+            return data.history;
+        } else {
+            return [];
+        }
+    }
 
     let canvas = $state();
-    let offset = $state(0);
-
-    let zoom = $state(0.1);
 
     function draw(canvas, offset, data) {
         let ctx = canvas.getContext("2d");
@@ -53,14 +56,16 @@
 
             let x = canvas.width + offset - canvas.width * 0.1 - i * difX;
             let y =
-                canvas.height -
-                (d.value / 10) * canvas.height * 0.8 -
-                canvas.height * 0.1;
+                d.value > 0
+                    ? canvas.height -
+                      (d.value / 10) * canvas.height * 0.8 -
+                      canvas.height * 0.1
+                    : false;
 
-            if (x + difX < 0) {
+            if (x + difX * 3 < 0) {
                 break;
             }
-            if (x <= canvas.width + difX) {
+            if (x <= canvas.width + difX * 3) {
                 //let prev = i > 0 ? points[points.length - 1] : false;
 
                 let currentText = `${d.date.day}.${d.date.month}.${d.date.year}`;
@@ -95,7 +100,7 @@
             //let x = canvas.width - canvas.width * 0.1 + offset - difX * i1;
 
             if (
-                points.find((e) => Math.floor(e.x) === Math.floor(xL) && e.name)
+                points.find((e) => Math.floor(e.x) === Math.floor(xL) && e.name && e.y !== false)
             ) {
                 ctx.strokeStyle = "rgba(20, 97, 222, 0.8)";
             } else {
@@ -129,19 +134,22 @@
         ctx.beginPath();
         ctx.moveTo(points[0]?.x, points[0]?.y);
         for (let p of points.slice(1)) {
+            if (p.y === false) continue;
             ctx.lineTo(p.x, p.y);
         }
         ctx.stroke();
 
         for (let p of points) {
-            ctx.fillStyle = "rgb(37,37,37)";
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, 7, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.fillStyle = "#1461de";
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
-            ctx.fill();
+            if (p.y !== false) {
+                ctx.fillStyle = "rgb(37,37,37)";
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 7, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = "#1461de";
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+                ctx.fill();
+            }
             if (p.name)
                 ctx.fillText(
                     p.name,
@@ -197,7 +205,6 @@
         function onTouchMove(e) {
             e.preventDefault();
 
-
             offset = Math.min(
                 Math.max(offset + e.touches[0].clientX - beginTouch, 0),
                 canvas.width * zoom * tmpData.length,
@@ -223,12 +230,11 @@
 </script>
 
 <div class="wrap">
-    <select>
-        <option value="week">week</option>
-        <option value="month">month</option>
-        <option value="year">year</option>
-        <option value="5years">5 years</option>
-        <option value="max">max</option>
+    <select bind:value={selectedAvg}>
+        <option value="1">1 day</option>
+        <option value="7">1 week</option>
+        <option value="30">1 month</option>
+        <option value="365">1 year</option>
     </select>
     <canvas bind:this={canvas} use:canvasAction></canvas>
 </div>
